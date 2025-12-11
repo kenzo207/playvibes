@@ -25,17 +25,12 @@ export const authClient = createAuthClient({
   baseURL: getBaseURL(),
 });
 
-export const {
-  signIn,
-  signOut,
-  signUp,
-  useSession,
-  getSession,
-} = authClient;
+export const { signIn, signOut, signUp, useSession, getSession } = authClient;
 
 // Helper function to sign in with Spotify
-export const signInWithSpotify = () => {
+export const signInWithSpotify = (callbackURL: string = "/browse") => {
   return signIn.social({
     provider: "spotify",
+    callbackURL,
   });
 };
