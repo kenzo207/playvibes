@@ -104,12 +104,91 @@ export async function POST(request: NextRequest) {
             description: spotifyPlaylist.description,
             imageUrl: spotifyPlaylist.images?.[0]?.url,
             trackCount: spotifyPlaylist.tracks.total,
-            genres: [], // Will be populated later with metadata sync
+            genres: [], // Will be populated below
             moods: [],
             activities: [],
             isPublic: true,
           })
           .returning();
+
+        // AUTO-SYNC: Populate metadata immediately
+        try {
+          // Fetch playlist tracks to analyze genres/moods (simplified approach)
+          const tracksResponse = await spotifyAPI.makeSpotifyRequest(
+            `/playlists/${spotifyPlaylistId}/tracks?limit=50`,
+            accessToken
+          );
+
+          let genres: string[] = [];
+          const moods: string[] = [];
+          const activities: string[] = [];
+
+          if (tracksResponse.ok) {
+            const tracksData = await tracksResponse.json();
+
+            // Extract genres from track artists (simplified approach)
+            const artistIds = tracksData.items
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              .map((item: any) => item.track?.artists?.[0]?.id)
+              .filter(Boolean)
+              .slice(0, 10); // Limit to first 10 artists
+
+            if (artistIds.length > 0) {
+              const artistsResponse = await spotifyAPI.makeSpotifyRequest(
+                `/artists?ids=${artistIds.join(",")}`,
+                accessToken
+              );
+
+              if (artistsResponse.ok) {
+                const artistsData = await artistsResponse.json();
+                const allGenres = artistsData.artists
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  .flatMap((artist: any) => artist.genres || [])
+                  .filter(Boolean) as string[];
+
+                // Get unique genres
+                genres = [...new Set(allGenres)].slice(0, 5);
+              }
+            }
+
+            // Simple mood/activity inference based on playlist name and description
+            const text =
+              `${spotifyPlaylist.name} ${spotifyPlaylist.description || ""}`.toLowerCase();
+
+            // Basic mood detection
+            if (text.includes("chill") || text.includes("relax")) moods.push("chill");
+            if (text.includes("happy") || text.includes("upbeat")) moods.push("happy");
+            if (text.includes("sad") || text.includes("melancholy")) moods.push("sad");
+            if (text.includes("energetic") || text.includes("pump")) moods.push("energetic");
+
+            // Basic activity detection
+            if (text.includes("workout") || text.includes("gym")) activities.push("workout");
+            if (text.includes("study") || text.includes("focus")) activities.push("study");
+            if (text.includes("party") || text.includes("dance")) activities.push("party");
+            if (text.includes("sleep") || text.includes("night")) activities.push("sleep");
+            if (text.includes("drive") || text.includes("road")) activities.push("driving");
+
+            // Update the newly created playlist with metadata
+            const finalPlaylist = await db
+              .update(sharedPlaylists)
+              .set({
+                genres,
+                moods,
+                activities,
+                updatedAt: new Date(),
+              })
+              .where(eq(sharedPlaylists.id, newSharedPlaylist[0].id))
+              .returning();
+
+            return NextResponse.json({
+              message: "Playlist shared and synced successfully",
+              playlist: finalPlaylist[0],
+            });
+          }
+        } catch (syncError) {
+          console.error("Auto-sync failed:", syncError);
+          // Return the playlist anyway, even if sync failed
+        }
 
         return NextResponse.json({
           message: "Playlist shared successfully",
