@@ -12,9 +12,7 @@ export default function Home() {
 
   // Redirect to /browse if user is already logged in
   useEffect(() => {
-    console.log("Session state:", { session, isPending });
     if (session?.user) {
-      console.log("Redirecting to /browse...");
       router.push("/browse");
     }
   }, [session, isPending, router]);
@@ -43,11 +41,18 @@ export default function Home() {
             </span>
           </h1>
 
-          <p className="mt-6 text-xl sm:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed animate-slide-up" style={{ animationDelay: '0.1s' }}>
-            Connect your Spotify, curate your best playlists, and let the community discover your musical taste.
+          <p
+            className="mt-6 text-xl sm:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed animate-slide-up"
+            style={{ animationDelay: "0.1s" }}
+          >
+            Connect your Spotify, curate your best playlists, and let the community discover your
+            musical taste.
           </p>
 
-          <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up" style={{ animationDelay: '0.2s' }}>
+          <div
+            className="mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up"
+            style={{ animationDelay: "0.2s" }}
+          >
             <AuthGuard
               fallback={
                 <div className="w-full sm:w-auto">
@@ -59,10 +64,19 @@ export default function Home() {
               }
             >
               <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                <Button asChild size="lg" className="h-14 px-8 text-lg rounded-full shadow-lg hover:shadow-primary/25 transition-all duration-300 hover:scale-105">
+                <Button
+                  asChild
+                  size="lg"
+                  className="h-14 px-8 text-lg rounded-full shadow-lg hover:shadow-primary/25 transition-all duration-300 hover:scale-105"
+                >
                   <a href="/browse">Start Browsing</a>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="h-14 px-8 text-lg rounded-full border-2 hover:bg-secondary/50 transition-all duration-300">
+                <Button
+                  asChild
+                  variant="outline"
+                  size="lg"
+                  className="h-14 px-8 text-lg rounded-full border-2 hover:bg-secondary/50 transition-all duration-300"
+                >
                   <a href="/manage">Manage Playlists</a>
                 </Button>
               </div>
@@ -74,8 +88,18 @@ export default function Home() {
         <div className="mt-24 sm:mt-32 grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
           <FeatureCard
             icon={
-              <svg className="w-8 h-8 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+              <svg
+                className="w-8 h-8 text-purple-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
+                />
               </svg>
             }
             title="Connect Spotify"
@@ -84,8 +108,18 @@ export default function Home() {
           />
           <FeatureCard
             icon={
-              <svg className="w-8 h-8 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+              <svg
+                className="w-8 h-8 text-pink-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+                />
               </svg>
             }
             title="Share & Curate"
@@ -94,8 +128,18 @@ export default function Home() {
           />
           <FeatureCard
             icon={
-              <svg className="w-8 h-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9-9a9 9 0 00-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+              <svg
+                className="w-8 h-8 text-blue-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9-9a9 9 0 00-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
+                />
               </svg>
             }
             title="Discover Community"
@@ -126,7 +170,9 @@ function FeatureCard({ icon, title, description, delay }: FeatureCardProps) {
         <div className="mb-6 inline-flex p-4 rounded-2xl bg-background/50 ring-1 ring-white/10 shadow-sm group-hover:scale-110 transition-transform duration-500">
           {icon}
         </div>
-        <h3 className="text-xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors duration-300">{title}</h3>
+        <h3 className="text-xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors duration-300">
+          {title}
+        </h3>
         <p className="text-muted-foreground leading-relaxed">{description}</p>
       </div>
     </div>
@@ -140,7 +186,9 @@ function SignInButton() {
     } catch (error) {
       console.error("Error signing in:", error);
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-      alert(`Error signing in: ${errorMessage}\n\nFull error: ${JSON.stringify(error, Object.getOwnPropertyNames(error))}`);
+      alert(
+        `Error signing in: ${errorMessage}\n\nFull error: ${JSON.stringify(error, Object.getOwnPropertyNames(error))}`
+      );
     }
   };
 
@@ -150,11 +198,7 @@ function SignInButton() {
       size="lg"
       className="h-14 px-8 text-lg rounded-full bg-[#1DB954] hover:bg-[#1ed760] text-white shadow-lg hover:shadow-[#1DB954]/25 transition-all duration-300 hover:scale-105 w-full sm:w-auto"
     >
-      <svg
-        className="w-6 h-6 mr-3"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-      >
+      <svg className="w-6 h-6 mr-3" viewBox="0 0 24 24" fill="currentColor">
         <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.42 1.56-.299.421-1.02.599-1.559.3z" />
       </svg>
       Sign in with Spotify
