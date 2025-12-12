@@ -68,6 +68,7 @@ function SignInButton() {
       });
     } catch (error) {
       console.error("Error signing in:", error);
+      alert(`Login Error: ${error instanceof Error ? error.message : String(error)}`);
     }
   };
 

@@ -181,6 +181,7 @@ function FeatureCard({ icon, title, description, delay }: FeatureCardProps) {
 
 function SignInButton() {
   const handleSignIn = async () => {
+    alert("Debug: Login clicked. Attempting to connect...");
     try {
       await signInWithSpotify();
     } catch (error) {
