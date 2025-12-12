@@ -28,6 +28,8 @@ export const accounts = pgTable("accounts", {
   accessTokenExpiresAt: timestamp("access_token_expires_at", { mode: "date" }),
   tokenType: text("token_type"),
   scope: text("scope"),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow(),
 });
 
 // Sessions table (managed by Better Auth)
