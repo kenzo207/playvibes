@@ -39,7 +39,12 @@ export const auth = betterAuth({
       mapProfileToUser: (profile) => {
         console.log("Spotify profile received:", profile);
         return {
+          // Better Auth handles ID generation. We just map fields.
+          email: profile.email,
+          name: profile.display_name,
+          image: profile.images?.[0]?.url,
           spotifyId: profile.id,
+          emailVerified: true, // Trust Spotify email as verified
         };
       },
     },
