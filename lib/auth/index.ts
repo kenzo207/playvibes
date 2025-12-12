@@ -44,7 +44,6 @@ export const auth = betterAuth({
           name: profile.display_name,
           image: profile.images?.[0]?.url,
           spotifyId: profile.id,
-          emailVerified: true, // Trust Spotify email as verified
         };
       },
     },
