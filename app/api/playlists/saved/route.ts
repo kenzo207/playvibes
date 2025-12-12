@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { savedPlaylists, sharedPlaylists, users, playlistLikes, playlistComments } from "@/lib/db/schema";
+import {
+  savedPlaylists,
+  sharedPlaylists,
+  users,
+  playlistLikes,
+  playlistComments,
+} from "@/lib/db/schema";
 import { eq, desc, count, sql } from "drizzle-orm";
 import type { PlaylistWithDetails } from "@/lib/types";
 
@@ -12,10 +18,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!session) {
-      return NextResponse.json(
-        { error: "Authentication required" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -59,11 +62,7 @@ export async function GET(request: NextRequest) {
       .leftJoin(playlistLikes, eq(playlistLikes.playlistId, sharedPlaylists.id))
       .leftJoin(playlistComments, eq(playlistComments.playlistId, sharedPlaylists.id))
       .where(eq(savedPlaylists.userId, session.user.id))
-      .groupBy(
-        sharedPlaylists.id,
-        savedPlaylists.createdAt,
-        users.id
-      )
+      .groupBy(sharedPlaylists.id, savedPlaylists.createdAt, users.id)
       .orderBy(desc(savedPlaylists.createdAt))
       .limit(limit)
       .offset(offset);
@@ -73,17 +72,20 @@ export async function GET(request: NextRequest) {
     // Check which playlists the current user has liked and saved
     const playlistIds = results.map((p: { id: string }) => p.id);
 
-    const userLikes = playlistIds.length > 0 ? await db
-      .select({ playlistId: playlistLikes.playlistId })
-      .from(playlistLikes)
-      .where(
-        sql`${playlistLikes.playlistId} = ANY(${playlistIds}) AND ${playlistLikes.userId} = ${session.user.id}`
-      ) : [];
+    const userLikes =
+      playlistIds.length > 0
+        ? await db
+            .select({ playlistId: playlistLikes.playlistId })
+            .from(playlistLikes)
+            .where(
+              sql`${playlistLikes.playlistId} = ANY(${playlistIds}) AND ${playlistLikes.userId} = ${session.user.id}`
+            )
+        : [];
 
     const userLikesSet = new Set(userLikes.map((like: { playlistId: string }) => like.playlistId));
 
     // Transform results to include user interaction status
-    const playlistsWithDetails: PlaylistWithDetails[] = results.map((result: PlaylistWithDetails) => ({
+    const playlistsWithDetails: PlaylistWithDetails[] = results.map((result) => ({
       id: result.id,
       spotifyPlaylistId: result.spotifyPlaylistId,
       userId: result.userId,
@@ -124,9 +126,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error fetching saved playlists:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch saved playlists" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch saved playlists" }, { status: 500 });
   }
 }
