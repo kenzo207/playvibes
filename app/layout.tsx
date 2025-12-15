@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { GlobalErrorInitializer } from "@/components/global-error-initializer";
 import { SWRProvider } from "@/components/providers/swr-provider";
+import { Navbar } from "@/components/layout/navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,9 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {/* Skip to main content link for keyboard navigation */}
         <a href="#main-content" className="skip-to-main">
           Skip to main content
@@ -45,6 +44,7 @@ export default function RootLayout({
             <ToastProvider>
               <AuthProvider>
                 <PlaybackProvider>
+                  <Navbar />
                   {children}
                   <GlobalPlayer />
                 </PlaybackProvider>
