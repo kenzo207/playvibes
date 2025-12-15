@@ -67,7 +67,7 @@ export function PlaylistGrid({
   useEffect(() => {
     if (!externalPlaylists) {
       setInternalPlaylists([]);
-      setPagination(prev => ({ ...prev, page: 1 }));
+      setPagination((prev) => ({ ...prev, page: 1 }));
       fetchPlaylists(1, true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,32 +90,36 @@ export function PlaylistGrid({
 
       // Add filters to params
       if (filters?.search) {
-        params.append('q', filters.search);
+        params.append("q", filters.search);
       }
       if (filters?.genres && filters.genres.length > 0) {
-        params.append('genres', filters.genres.join(','));
+        params.append("genres", filters.genres.join(","));
       }
       if (filters?.moods && filters.moods.length > 0) {
-        params.append('moods', filters.moods.join(','));
+        params.append("moods", filters.moods.join(","));
       }
       if (filters?.activities && filters.activities.length > 0) {
-        params.append('activities', filters.activities.join(','));
+        params.append("activities", filters.activities.join(","));
       }
       if (filters?.sortBy) {
-        params.append('sortBy', filters.sortBy);
+        params.append("sortBy", filters.sortBy);
       }
 
       // Choose endpoint based on whether we have filters
-      const endpoint = filters?.search || filters?.genres?.length || filters?.moods?.length || filters?.activities?.length
-        ? '/api/playlists/search'
-        : '/api/playlists/public';
+      const endpoint =
+        filters?.search ||
+        filters?.genres?.length ||
+        filters?.moods?.length ||
+        filters?.activities?.length
+          ? "/api/playlists/search"
+          : "/api/playlists/public";
 
       const data: PaginatedResponse = await apiClient.get(`${endpoint}?${params}`);
 
       if (reset) {
         setInternalPlaylists(data.data);
       } else {
-        setInternalPlaylists(prev => [...prev, ...data.data]);
+        setInternalPlaylists((prev) => [...prev, ...data.data]);
       }
 
       setPagination(data.pagination);
@@ -144,25 +148,32 @@ export function PlaylistGrid({
 
   const handleLike = async (playlistId: string) => {
     try {
-      const playlist = playlists.find(p => p.id === playlistId);
-      const method = playlist?.isLiked ? 'DELETE' : 'POST';
+      const playlist = playlists.find((p) => p.id === playlistId);
+      const method = playlist?.isLiked ? "DELETE" : "POST";
 
-      const data = method === 'DELETE'
-        ? await apiClient.delete<{ isLiked: boolean; likesCount: number }>(`/api/playlists/${playlistId}/like`)
-        : await apiClient.post<{ isLiked: boolean; likesCount: number }>(`/api/playlists/${playlistId}/like`);
+      const data =
+        method === "DELETE"
+          ? await apiClient.delete<{ isLiked: boolean; likesCount: number }>(
+              `/api/playlists/${playlistId}/like`
+            )
+          : await apiClient.post<{ isLiked: boolean; likesCount: number }>(
+              `/api/playlists/${playlistId}/like`
+            );
 
       // Update local state
       if (!externalPlaylists) {
-        setInternalPlaylists(prev => prev.map(playlist => {
-          if (playlist.id === playlistId) {
-            return {
-              ...playlist,
-              isLiked: data.isLiked,
-              likesCount: data.likesCount,
-            };
-          }
-          return playlist;
-        }));
+        setInternalPlaylists((prev) =>
+          prev.map((playlist) => {
+            if (playlist.id === playlistId) {
+              return {
+                ...playlist,
+                isLiked: data.isLiked,
+                likesCount: data.likesCount,
+              };
+            }
+            return playlist;
+          })
+        );
       } else {
         // Notify parent component of the update
         onPlaylistUpdate?.(playlistId, {
@@ -183,24 +194,27 @@ export function PlaylistGrid({
 
   const handleSave = async (playlistId: string) => {
     try {
-      const playlist = playlists.find(p => p.id === playlistId);
-      const method = playlist?.isSaved ? 'DELETE' : 'POST';
+      const playlist = playlists.find((p) => p.id === playlistId);
+      const method = playlist?.isSaved ? "DELETE" : "POST";
 
-      const data = method === 'DELETE'
-        ? await apiClient.delete<{ isSaved: boolean }>(`/api/playlists/${playlistId}/save`)
-        : await apiClient.post<{ isSaved: boolean }>(`/api/playlists/${playlistId}/save`);
+      const data =
+        method === "DELETE"
+          ? await apiClient.delete<{ isSaved: boolean }>(`/api/playlists/${playlistId}/save`)
+          : await apiClient.post<{ isSaved: boolean }>(`/api/playlists/${playlistId}/save`);
 
       // Update local state
       if (!externalPlaylists) {
-        setInternalPlaylists(prev => prev.map(playlist => {
-          if (playlist.id === playlistId) {
-            return {
-              ...playlist,
-              isSaved: data.isSaved,
-            };
-          }
-          return playlist;
-        }));
+        setInternalPlaylists((prev) =>
+          prev.map((playlist) => {
+            if (playlist.id === playlistId) {
+              return {
+                ...playlist,
+                isSaved: data.isSaved,
+              };
+            }
+            return playlist;
+          })
+        );
       } else {
         // For saved playlists page, remove the playlist if it's unsaved
         if (!data.isSaved) {
@@ -248,12 +262,27 @@ export function PlaylistGrid({
   if (playlists.length === 0) {
     return (
       <div className={`flex flex-col items-center justify-center py-12 ${className}`}>
-        <p className="text-muted-foreground mb-2">No playlists found</p>
-        <p className="text-sm text-muted-foreground">
-          {filters?.search || filters?.genres?.length || filters?.moods?.length || filters?.activities?.length
-            ? 'Try adjusting your search or filters'
-            : 'Be the first to share a playlist!'}
+        <p className="text-muted-foreground mb-4">No playlists found</p>
+        <p className="text-sm text-muted-foreground mb-6">
+          {filters?.search ||
+          filters?.genres?.length ||
+          filters?.moods?.length ||
+          filters?.activities?.length
+            ? "Try adjusting your search or filters"
+            : "Be the first to share a playlist!"}
         </p>
+
+        {/* CTAs for empty state */}
+        {!(
+          filters?.search ||
+          filters?.genres?.length ||
+          filters?.moods?.length ||
+          filters?.activities?.length
+        ) && (
+          <Button asChild>
+            <a href="/manage">Manage Playlists</a>
+          </Button>
+        )}
       </div>
     );
   }
