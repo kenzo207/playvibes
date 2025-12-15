@@ -20,10 +20,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background overflow-hidden selection:bg-primary/20">
       {/* Dynamic Background */}
+      {/* Dynamic Background */}
       <div className="fixed inset-0 -z-10">
-        <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+        <div className="absolute inset-0 mesh-gradient opacity-30 dark:opacity-20"></div>
         <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
       </div>
 
@@ -121,7 +120,7 @@ interface FeatureCardProps {
 function FeatureCard({ icon, title, description, delay }: FeatureCardProps) {
   return (
     <div
-      className="group relative p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-primary/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/5 animate-fade-in backdrop-blur-md"
+      className="group relative p-8 rounded-3xl glass-card border border-white/10 hover:border-primary/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/5 animate-fade-in"
       style={{ animationDelay: delay }}
     >
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />

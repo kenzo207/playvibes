@@ -39,7 +39,7 @@ export function PlaylistCard({
   const [localPlaylist, setLocalPlaylist] = useState(playlist);
 
   const handleLikeChange = (isLiked: boolean, likesCount: number) => {
-    setLocalPlaylist(prev => ({
+    setLocalPlaylist((prev) => ({
       ...prev,
       isLiked,
       likesCount,
@@ -50,7 +50,7 @@ export function PlaylistCard({
   };
 
   const handleSaveChange = (isSaved: boolean) => {
-    setLocalPlaylist(prev => ({
+    setLocalPlaylist((prev) => ({
       ...prev,
       isSaved,
     }));
@@ -74,7 +74,10 @@ export function PlaylistCard({
   return (
     <AnimatedCard
       hover="lift"
-      className={cn("overflow-hidden animate-fade-in cursor-pointer", className)}
+      className={cn(
+        "overflow-hidden animate-fade-in cursor-pointer glass-card border-none",
+        className
+      )}
       style={style}
       onClick={handleCardClick}
       role="article"
@@ -121,7 +124,10 @@ export function PlaylistCard({
       {/* Playlist Info */}
       <div className="p-4 space-y-3">
         <div>
-          <h3 className="font-semibold text-lg line-clamp-1 mb-1 group-hover:text-primary transition-colors" id={`playlist-title-${playlist.id}`}>
+          <h3
+            className="font-semibold text-lg line-clamp-1 mb-1 group-hover:text-primary transition-colors"
+            id={`playlist-title-${playlist.id}`}
+          >
             {playlist.name}
           </h3>
           {playlist.description && (
@@ -140,9 +146,10 @@ export function PlaylistCard({
         {((playlist.genres && playlist.genres.length > 0) ||
           (playlist.moods && playlist.moods.length > 0) ||
           (playlist.activities && playlist.activities.length > 0)) && (
-            <div className="mb-3">
-              <div className="flex flex-wrap gap-1">
-                {playlist.genres && playlist.genres.slice(0, 2).map((genre) => (
+          <div className="mb-3">
+            <div className="flex flex-wrap gap-1">
+              {playlist.genres &&
+                playlist.genres.slice(0, 2).map((genre) => (
                   <span
                     key={genre}
                     className="inline-block px-2 py-1 text-xs bg-primary/10 text-primary rounded-full"
@@ -150,7 +157,8 @@ export function PlaylistCard({
                     {genre}
                   </span>
                 ))}
-                {playlist.moods && playlist.moods.slice(0, 2).map((mood) => (
+              {playlist.moods &&
+                playlist.moods.slice(0, 2).map((mood) => (
                   <span
                     key={mood}
                     className="inline-block px-2 py-1 text-xs bg-secondary/80 text-secondary-foreground rounded-full"
@@ -158,7 +166,8 @@ export function PlaylistCard({
                     {mood}
                   </span>
                 ))}
-                {playlist.activities && playlist.activities.slice(0, 1).map((activity) => (
+              {playlist.activities &&
+                playlist.activities.slice(0, 1).map((activity) => (
                   <span
                     key={activity}
                     className="inline-block px-2 py-1 text-xs bg-accent text-accent-foreground rounded-full"
@@ -166,13 +175,16 @@ export function PlaylistCard({
                     {activity}
                   </span>
                 ))}
-              </div>
             </div>
-          )}
+          </div>
+        )}
 
         {/* Actions - Minimum 44x44px touch targets */}
         {showActions && (
-          <div className="flex items-center justify-between min-h-[44px]" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="flex items-center justify-between min-h-[44px]"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center space-x-1">
               <LikeButton
                 playlistId={localPlaylist.id}
@@ -181,7 +193,10 @@ export function PlaylistCard({
                 onLikeChange={handleLikeChange}
               />
 
-              <div className="flex items-center space-x-1 px-2" aria-label={`${localPlaylist.commentsCount} comments`}>
+              <div
+                className="flex items-center space-x-1 px-2"
+                aria-label={`${localPlaylist.commentsCount} comments`}
+              >
                 <MessageCircle className="w-5 h-5 text-muted-foreground" aria-hidden="true" />
                 <span className="text-sm text-muted-foreground">{localPlaylist.commentsCount}</span>
               </div>
@@ -200,10 +215,7 @@ export function PlaylistCard({
         {/* Comments Section */}
         {showComments && (
           <div className="mt-4 pt-4 border-t border-border">
-            <CommentSection
-              playlistId={localPlaylist.id}
-              currentUserId={currentUserId}
-            />
+            <CommentSection playlistId={localPlaylist.id} currentUserId={currentUserId} />
           </div>
         )}
       </div>
