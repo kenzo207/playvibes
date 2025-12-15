@@ -7,7 +7,7 @@ import {
   playlistComments,
   savedPlaylists,
 } from "@/lib/db/schema";
-import { eq, desc, asc, count, sql } from "drizzle-orm";
+import { eq, desc, asc, count, sql, inArray, and } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
@@ -117,11 +117,15 @@ export async function GET(request: NextRequest) {
       const playlistIds = playlists.map((p: { id: string }) => p.id);
 
       // Get user's likes for these playlists
+      // Get user's likes for these playlists
       const userLikes = await db
         .select({ playlistId: playlistLikes.playlistId })
         .from(playlistLikes)
         .where(
-          sql`${playlistLikes.playlistId} = ANY(${playlistIds}) AND ${playlistLikes.userId} = ${session.user.id}`
+          and(
+            inArray(playlistLikes.playlistId, playlistIds),
+            eq(playlistLikes.userId, session.user.id)
+          )
         );
 
       // Get user's saves for these playlists
@@ -129,7 +133,10 @@ export async function GET(request: NextRequest) {
         .select({ playlistId: savedPlaylists.playlistId })
         .from(savedPlaylists)
         .where(
-          sql`${savedPlaylists.playlistId} = ANY(${playlistIds}) AND ${savedPlaylists.userId} = ${session.user.id}`
+          and(
+            inArray(savedPlaylists.playlistId, playlistIds),
+            eq(savedPlaylists.userId, session.user.id)
+          )
         );
 
       const likedPlaylistIds = new Set(
