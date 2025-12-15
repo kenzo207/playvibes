@@ -15,7 +15,7 @@ export function WelcomeBanner({ userName, isFirstVisit }: WelcomeBannerProps) {
 
   useEffect(() => {
     // Show banner on mount
-    setIsVisible(true);
+    const timer = setTimeout(() => setIsVisible(true), 100);
 
     // Show onboarding tooltip for first-time visitors after a short delay
     if (isFirstVisit) {
@@ -23,8 +23,13 @@ export function WelcomeBanner({ userName, isFirstVisit }: WelcomeBannerProps) {
         setShowTooltip(true);
       }, 1000);
 
-      return () => clearTimeout(tooltipTimer);
+      return () => {
+        clearTimeout(timer);
+        clearTimeout(tooltipTimer);
+      };
     }
+
+    return () => clearTimeout(timer);
   }, [isFirstVisit]);
 
   const handleDismiss = () => {
@@ -46,12 +51,7 @@ export function WelcomeBanner({ userName, isFirstVisit }: WelcomeBannerProps) {
           <div className="relative p-6 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/20 text-primary">
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -61,9 +61,7 @@ export function WelcomeBanner({ userName, isFirstVisit }: WelcomeBannerProps) {
                 </svg>
               </div>
               <div>
-                <h2 className="text-xl font-bold text-foreground">
-                  Welcome back, {userName}! 🎵
-                </h2>
+                <h2 className="text-xl font-bold text-foreground">Welcome back, {userName}! 🎵</h2>
                 <p className="text-sm text-muted-foreground mt-1">
                   {isFirstVisit
                     ? "Ready to discover amazing playlists from the community?"
@@ -101,25 +99,29 @@ export function WelcomeBanner({ userName, isFirstVisit }: WelcomeBannerProps) {
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-0.5">•</span>
                     <span>
-                      <strong className="text-foreground">Browse:</strong> Discover playlists shared by the community
+                      <strong className="text-foreground">Browse:</strong> Discover playlists shared
+                      by the community
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-0.5">•</span>
                     <span>
-                      <strong className="text-foreground">Like & Save:</strong> Show appreciation and save your favorites
+                      <strong className="text-foreground">Like & Save:</strong> Show appreciation
+                      and save your favorites
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-0.5">•</span>
                     <span>
-                      <strong className="text-foreground">Manage:</strong> Share your own playlists with the world
+                      <strong className="text-foreground">Manage:</strong> Share your own playlists
+                      with the world
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-0.5">•</span>
                     <span>
-                      <strong className="text-foreground">Play:</strong> Listen to playlists directly in the app
+                      <strong className="text-foreground">Play:</strong> Listen to playlists
+                      directly in the app
                     </span>
                   </li>
                 </ul>

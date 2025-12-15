@@ -16,12 +16,11 @@ export const users = pgTable("users", {
 // Accounts table for OAuth tokens (managed by Better Auth)
 export const accounts = pgTable("accounts", {
   id: text("id").primaryKey(),
-  accountId: text("account_id"), // Nullable - Better Auth manages this
+  accountId: text("account_id").notNull(),
   userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   providerId: text("provider_id").notNull(),
-  providerAccountId: text("provider_account_id").notNull(),
   accessToken: text("access_token"),
   refreshToken: text("refresh_token"),
   expiresAt: timestamp("expires_at", { mode: "date" }),

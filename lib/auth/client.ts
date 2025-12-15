@@ -7,12 +7,17 @@ const getBaseURL = () => {
     return window.location.origin;
   }
 
-  // If explicitly set, use it
+  // If explicitly set, use it (Prioritize this for Production/Staging specificity)
+  if (process.env.NEXT_PUBLIC_APP_URL) {
+    return process.env.NEXT_PUBLIC_APP_URL;
+  }
+
+  // If explicitly set (legacy/alternative)
   if (process.env.NEXT_PUBLIC_BETTER_AUTH_URL) {
     return process.env.NEXT_PUBLIC_BETTER_AUTH_URL;
   }
 
-  // If on Vercel (SSR), use VERCEL_URL
+  // If on Vercel (SSR), use VERCEL_URL. Note: VERCEL_URL does not include protocol.
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
   }

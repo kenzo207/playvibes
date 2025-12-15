@@ -39,20 +39,17 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
         clearTimeout(timeoutId);
       }
 
-      timeoutId = setTimeout(
-        () => {
-          lastCallTime = Date.now();
-          func(...args);
-          timeoutId = null;
-        },
-        wait - timeSinceLastCall
-      );
+      timeoutId = setTimeout(() => {
+        lastCallTime = Date.now();
+        func(...args);
+        timeoutId = null;
+      }, wait - timeSinceLastCall);
     }
   };
 }
 
 // React hook for debounced values
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from "react";
 
 export function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
@@ -73,27 +70,34 @@ export function useDebounce<T>(value: T, delay: number): T {
 // React hook for throttled values
 export function useThrottle<T>(value: T, delay: number): T {
   const [throttledValue, setThrottledValue] = useState<T>(value);
-  const [lastUpdated, setLastUpdated] = useState<number>(() => Date.now());
+  const lastUpdated = useRef<number>(0);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const now = Date.now();
-    const timeSinceLastUpdate = now - lastUpdated;
+    const timeSinceLastUpdate = now - lastUpdated.current;
 
     if (timeSinceLastUpdate >= delay) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setThrottledValue(value);
-      setLastUpdated(now);
+      lastUpdated.current = now;
     } else {
-      const timeoutId = setTimeout(
-        () => {
-          setThrottledValue(value);
-          setLastUpdated(Date.now());
-        },
-        delay - timeSinceLastUpdate
-      );
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
 
-      return () => clearTimeout(timeoutId);
+      timeoutRef.current = setTimeout(() => {
+        setThrottledValue(value);
+        lastUpdated.current = Date.now();
+      }, delay - timeSinceLastUpdate);
     }
-  }, [value, delay, lastUpdated]);
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [value, delay]);
 
   return throttledValue;
 }

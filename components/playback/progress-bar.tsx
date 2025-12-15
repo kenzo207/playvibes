@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useRef, useCallback } from 'react';
-import { throttle } from '@/lib/utils/performance';
+import { useState, useRef, useMemo } from "react";
+import { throttle } from "@/lib/utils/performance";
 
 interface ProgressBarProps {
   position: number;
@@ -10,12 +10,7 @@ interface ProgressBarProps {
   disabled?: boolean;
 }
 
-export function ProgressBar({
-  position,
-  duration,
-  onSeek,
-  disabled = false
-}: ProgressBarProps) {
+export function ProgressBar({ position, duration, onSeek, disabled = false }: ProgressBarProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [hoverPosition, setHoverPosition] = useState<number | null>(null);
   const progressRef = useRef<HTMLDivElement>(null);
@@ -24,15 +19,16 @@ export function ProgressBar({
     const totalSeconds = Math.floor(ms / 1000);
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
   // Throttle seek updates to 100ms to reduce API calls during dragging
-  const throttledSeek = useCallback(
-    throttle((...args: unknown[]) => {
-      const newPosition = args[0] as number;
-      onSeek(newPosition);
-    }, 100),
+  const throttledSeek = useMemo(
+    () =>
+      throttle((...args: unknown[]) => {
+        const newPosition = args[0] as number;
+        onSeek(newPosition);
+      }, 100),
     [onSeek]
   );
 
@@ -87,8 +83,9 @@ export function ProgressBar({
     <div className="w-full">
       <div
         ref={progressRef}
-        className={`relative w-full bg-muted rounded-full h-1 ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:h-1.5'
-          } transition-all duration-200 group`}
+        className={`relative w-full bg-muted rounded-full h-1 ${
+          disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:h-1.5"
+        } transition-all duration-200 group`}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -106,7 +103,7 @@ export function ProgressBar({
           className="bg-primary h-full rounded-full transition-all shadow-sm"
           style={{
             width: `${progressPercentage}%`,
-            transitionDuration: isDragging ? '0ms' : '1000ms'
+            transitionDuration: isDragging ? "0ms" : "1000ms",
           }}
         />
 
@@ -116,7 +113,7 @@ export function ProgressBar({
             className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-primary rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
             style={{
               left: `${(hoverPosition / duration) * 100}%`,
-              transform: 'translate(-50%, -50%)'
+              transform: "translate(-50%, -50%)",
             }}
           />
         )}
@@ -127,7 +124,7 @@ export function ProgressBar({
             className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-primary rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
             style={{
               left: `${progressPercentage}%`,
-              transform: 'translate(-50%, -50%)'
+              transform: "translate(-50%, -50%)",
             }}
           />
         )}

@@ -1,0 +1,129 @@
+
+> playvibes@0.1.0 lint
+> eslint
+
+
+/home/kenzoobryan/playvibes/app/api/playlists/[id]/like/route.ts
+  6:10  warning  'nanoid' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/kenzoobryan/playvibes/app/api/playlists/[id]/save/route.ts
+  6:10  warning  'nanoid' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/kenzoobryan/playvibes/app/api/users/[userId]/playlists/route.ts
+  4:32  warning  'sql' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/kenzoobryan/playvibes/app/manage/page.tsx
+  22:17  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+
+/home/kenzoobryan/playvibes/app/profile/page.tsx
+  36:6  warning  React Hook useEffect has a missing dependency: 'fetchProfile'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/kenzoobryan/playvibes/app/saved/page.tsx
+  14:20  warning  'AlertCircle' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/kenzoobryan/playvibes/components/auth/user-profile.tsx
+  122:11  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/home/kenzoobryan/playvibes/components/global-error-initializer.tsx
+  10:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+
+/home/kenzoobryan/playvibes/components/playback/global-player.tsx
+   54:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+   90:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  135:19  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/home/kenzoobryan/playvibes/components/playback/playback-provider.tsx
+  113:6  warning  React Hook useEffect has a missing dependency: 'toast'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/kenzoobryan/playvibes/components/playlists/playlist-detail-modal.tsx
+   14:10  warning  'cn' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  135:14  warning  'error' is defined but never used                                     @typescript-eslint/no-unused-vars
+
+/home/kenzoobryan/playvibes/components/playlists/playlist-player.tsx
+  174:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/home/kenzoobryan/playvibes/components/playlists/share-button.tsx
+  57:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/kenzoobryan/playvibes/components/profile/profile-header.tsx
+   4:10  warning  'Avatar' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+  20:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/home/kenzoobryan/playvibes/components/profile/profile-playlists.tsx
+  29:6  warning  React Hook useEffect has a missing dependency: 'fetchPlaylists'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/kenzoobryan/playvibes/hooks/use-optimistic-update.ts
+   5:38  warning  'TState' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  14:37  warning  'TState' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/kenzoobryan/playvibes/hooks/use-spotify-player.ts
+  30:11  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+
+/home/kenzoobryan/playvibes/lib/auth/index.ts
+  39:9  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+
+/home/kenzoobryan/playvibes/lib/db/seed.ts
+    7:3  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+   35:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+   96:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  111:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  144:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  157:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  162:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  173:7  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+
+/home/kenzoobryan/playvibes/lib/spotify/playback.ts
+  72:7  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  79:7  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+
+/home/kenzoobryan/playvibes/lib/utils/error.ts
+  79:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  81:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  82:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  83:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  86:7  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  89:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  90:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+
+/home/kenzoobryan/playvibes/lib/utils/performance.ts
+  84:7  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/home/kenzoobryan/playvibes/lib/utils/performance.ts:84:7
+  82 |
+  83 |     if (timeSinceLastUpdate >= delay) {
+> 84 |       setThrottledValue(value);
+     |       ^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  85 |       lastUpdated.current = now;
+  86 |     } else {
+  87 |       if (timeoutRef.current) {  react-hooks/set-state-in-effect
+
+/home/kenzoobryan/playvibes/scripts/init-dev-db.js
+    8:1  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  106:1  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  107:1  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  108:1  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  109:1  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  110:1  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  111:1  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+
+/home/kenzoobryan/playvibes/scripts/test-auth-config.js
+   2:1  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+   8:3  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  13:3  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  21:7  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  23:7  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  27:3  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  28:3  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  32:3  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  33:3  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  34:3  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  35:3  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+
+✖ 59 problems (1 error, 58 warnings)
+
