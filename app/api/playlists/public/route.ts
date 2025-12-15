@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { sharedPlaylists, users, playlistLikes, playlistComments, savedPlaylists } from "@/lib/db/schema";
+import {
+  sharedPlaylists,
+  users,
+  playlistLikes,
+  playlistComments,
+  savedPlaylists,
+} from "@/lib/db/schema";
 import { eq, desc, asc, count, sql } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 
@@ -64,7 +70,10 @@ export async function GET(request: NextRequest) {
 
     // Add savedPlaylists join only if sorting by most_saved
     if (sortBy === "most_saved") {
-      queryBuilder = queryBuilder.leftJoin(savedPlaylists, eq(sharedPlaylists.id, savedPlaylists.playlistId));
+      queryBuilder = queryBuilder.leftJoin(
+        savedPlaylists,
+        eq(sharedPlaylists.id, savedPlaylists.playlistId)
+      );
     }
 
     const publicPlaylistsQuery = queryBuilder
@@ -104,7 +113,7 @@ export async function GET(request: NextRequest) {
 
     // If user is authenticated, check which playlists they've liked/saved
     let playlistsWithUserActions = playlists;
-    if (session?.user) {
+    if (session?.user && playlists.length > 0) {
       const playlistIds = playlists.map((p: { id: string }) => p.id);
 
       // Get user's likes for these playlists
@@ -123,14 +132,26 @@ export async function GET(request: NextRequest) {
           sql`${savedPlaylists.playlistId} = ANY(${playlistIds}) AND ${savedPlaylists.userId} = ${session.user.id}`
         );
 
-      const likedPlaylistIds = new Set(userLikes.map((like: { playlistId: string }) => like.playlistId));
-      const savedPlaylistIds = new Set(userSaves.map((save: { playlistId: string }) => save.playlistId));
+      const likedPlaylistIds = new Set(
+        userLikes.map((like: { playlistId: string }) => like.playlistId)
+      );
+      const savedPlaylistIds = new Set(
+        userSaves.map((save: { playlistId: string }) => save.playlistId)
+      );
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       playlistsWithUserActions = playlists.map((playlist: any) => ({
         ...playlist,
         isLiked: likedPlaylistIds.has(playlist.id),
         isSaved: savedPlaylistIds.has(playlist.id),
+      }));
+    } else {
+      // Return playlists as is if no user or no playlists found
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      playlistsWithUserActions = playlists.map((playlist: any) => ({
+        ...playlist,
+        isLiked: false,
+        isSaved: false,
       }));
     }
 
@@ -145,9 +166,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error fetching public playlists:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch public playlists" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch public playlists" }, { status: 500 });
   }
 }
