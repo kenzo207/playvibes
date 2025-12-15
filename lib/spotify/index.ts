@@ -71,7 +71,7 @@ export class SpotifyAPI {
       const now = Date.now();
 
       // Check if token is still valid (with 5 minute buffer)
-      if (accountData.expiresAt && accountData.expiresAt > now + 5 * 60 * 1000) {
+      if (accountData.expiresAt && accountData.expiresAt.getTime() > now + 5 * 60 * 1000) {
         return accountData.accessToken;
       }
 
@@ -91,7 +91,7 @@ export class SpotifyAPI {
         .set({
           accessToken: newTokens.accessToken,
           refreshToken: newTokens.refreshToken,
-          expiresAt: Math.floor(newTokens.expiresAt / 1000), // Better Auth expects seconds
+          expiresAt: new Date(newTokens.expiresAt),
         })
         .where(eq(accounts.id, accountData.id));
 
