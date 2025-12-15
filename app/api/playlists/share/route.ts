@@ -75,6 +75,7 @@ export async function POST(request: NextRequest) {
     if (isPublic) {
       // Share the playlist
       if (existingSharedPlaylist.length > 0) {
+        console.log("Updating existing playlist:", existingSharedPlaylist[0].id);
         // Update existing shared playlist
         const updated = await db
           .update(sharedPlaylists)
@@ -89,11 +90,17 @@ export async function POST(request: NextRequest) {
           .where(eq(sharedPlaylists.id, existingSharedPlaylist[0].id))
           .returning();
 
+        if (!updated || !updated[0]) {
+          console.error("Update returned empty result!", updated);
+          return NextResponse.json({ error: "Failed to update" }, { status: 500 });
+        }
+
         return NextResponse.json({
           message: "Playlist updated successfully",
           playlist: updated[0],
         });
       } else {
+        console.log("Creating new shared playlist for:", spotifyPlaylistId);
         // Create new shared playlist
         const newSharedPlaylist = await db
           .insert(sharedPlaylists)
@@ -112,6 +119,13 @@ export async function POST(request: NextRequest) {
           })
           .returning();
 
+        if (!newSharedPlaylist || !newSharedPlaylist[0]) {
+          console.error("Insert returned empty result!", newSharedPlaylist);
+          return NextResponse.json({ error: "Failed to insert" }, { status: 500 });
+        }
+
+        console.log("Created shared playlist ID:", newSharedPlaylist[0].id);
+
         // AUTO-SYNC: Populate metadata immediately
         const syncResult = await syncPlaylistMetadata(
           newSharedPlaylist[0].id,
@@ -120,6 +134,8 @@ export async function POST(request: NextRequest) {
           spotifyPlaylist.name,
           spotifyPlaylist.description
         );
+
+        console.log("Sync result:", syncResult);
 
         let finalPlaylist = newSharedPlaylist[0];
         if (syncResult.success && syncResult.genres && syncResult.moods && syncResult.activities) {
