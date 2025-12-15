@@ -18,10 +18,15 @@ export const playlistSchema = z.object({
   name: z
     .string()
     .min(1, "Playlist name is required")
-    .max(200, "Playlist name must be less than 200 characters"),
-  description: z.string().max(1000, "Description must be less than 1000 characters").optional(),
-  imageUrl: z.string().url("Invalid image URL").optional(),
-  trackCount: z.number().int().min(0).default(0),
+    .max(200, "Playlist name must be less than 200 characters")
+    .optional(),
+  description: z
+    .string()
+    .max(1000, "Description must be less than 1000 characters")
+    .optional()
+    .nullable(),
+  imageUrl: z.string().url("Invalid image URL").optional().nullable(),
+  trackCount: z.number().int().min(0).default(0).optional(),
   genres: z.array(z.string()).max(10, "Maximum 10 genres allowed").optional(),
   moods: z.array(z.string()).max(10, "Maximum 10 moods allowed").optional(),
   activities: z.array(z.string()).max(10, "Maximum 10 activities allowed").optional(),
