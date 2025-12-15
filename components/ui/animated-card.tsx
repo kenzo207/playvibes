@@ -33,12 +33,13 @@ export function AnimatedCard({
   return (
     <div
       className={cn(
-        "rounded-xl border transition-all duration-300 ease-out",
+        "rounded-3xl border transition-all duration-500 ease-out",
         hoverEffects[hover],
-        gradient && "bg-gradient-to-br from-card to-card/50",
-        glass && "backdrop-blur-sm bg-card/80",
-        !gradient && !glass && "bg-card",
-        "border-border",
+        gradient &&
+          "bg-gradient-to-br from-card/80 via-card/50 to-card/30 border-white/10 shadow-lg",
+        glass && "backdrop-blur-xl bg-white/10 dark:bg-black/20 border-white/20 shadow-xl",
+        !gradient && !glass && "bg-card shadow-sm",
+        "border-border/50",
         className
       )}
       style={style}

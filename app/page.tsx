@@ -18,12 +18,10 @@ export default function Home() {
     }
   }, [session, isPending, router]);
   return (
-    <div className="min-h-screen bg-background overflow-hidden selection:bg-primary/20">
+    <div className="min-h-screen overflow-hidden selection:bg-primary/20">
       {/* Dynamic Background */}
-      {/* Dynamic Background */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute inset-0 mesh-gradient opacity-30 dark:opacity-20"></div>
-        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
+      <div className="fixed inset-0 -z-10 pointer-events-none">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-40"></div>
       </div>
 
       {/* Hero Section */}
@@ -117,15 +115,13 @@ interface FeatureCardProps {
   delay: string;
 }
 
+import { AnimatedCard } from "@/components/ui/animated-card";
+
 function FeatureCard({ icon, title, description, delay }: FeatureCardProps) {
   return (
-    <div
-      className="group relative p-8 rounded-3xl glass-card border border-white/10 hover:border-primary/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/5 animate-fade-in"
-      style={{ animationDelay: delay }}
-    >
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
+    <AnimatedCard hover="lift" glass className="p-8 group" style={{ animationDelay: delay }}>
       <div className="relative z-10">
-        <div className="mb-6 inline-flex p-4 rounded-2xl bg-background/50 ring-1 ring-white/10 shadow-sm group-hover:scale-110 transition-transform duration-500">
+        <div className="mb-6 inline-flex p-4 rounded-2xl bg-primary/5 ring-1 ring-primary/10 shadow-sm group-hover:scale-110 transition-transform duration-500">
           {icon}
         </div>
         <h3 className="text-xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors duration-300">
@@ -133,7 +129,7 @@ function FeatureCard({ icon, title, description, delay }: FeatureCardProps) {
         </h3>
         <p className="text-muted-foreground leading-relaxed">{description}</p>
       </div>
-    </div>
+    </AnimatedCard>
   );
 }
 
