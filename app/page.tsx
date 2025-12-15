@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { AuthGuard } from "@/components/auth/auth-guard";
 import { signInWithSpotify, useSession } from "@/lib/auth/client";
 import { Button } from "@/components/ui/button";
+import { Music, Heart, Globe } from "lucide-react";
 
 export default function Home() {
   const router = useRouter();
@@ -87,61 +88,19 @@ export default function Home() {
         {/* Feature Cards / How it works */}
         <div className="mt-24 sm:mt-32 grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
           <FeatureCard
-            icon={
-              <svg
-                className="w-8 h-8 text-purple-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
-                />
-              </svg>
-            }
+            icon={<Music className="w-8 h-8 text-purple-500" />}
             title="Connect Spotify"
             description="Link your account securely. We only access your public playlists and basic profile info."
             delay="0.3s"
           />
           <FeatureCard
-            icon={
-              <svg
-                className="w-8 h-8 text-pink-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
-                />
-              </svg>
-            }
+            icon={<Heart className="w-8 h-8 text-pink-500" />}
             title="Share & Curate"
             description="Select which playlists to feature on your profile. Add tags and descriptions to help others find them."
             delay="0.4s"
           />
           <FeatureCard
-            icon={
-              <svg
-                className="w-8 h-8 text-blue-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9-9a9 9 0 00-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
-                />
-              </svg>
-            }
+            icon={<Globe className="w-8 h-8 text-blue-500" />}
             title="Discover Community"
             description="Explore what others are listening to. Find hidden gems and new genres from real people."
             delay="0.5s"
@@ -181,15 +140,12 @@ function FeatureCard({ icon, title, description, delay }: FeatureCardProps) {
 
 function SignInButton() {
   const handleSignIn = async () => {
-    alert("Debug: Login clicked. Attempting to connect...");
     try {
       await signInWithSpotify();
     } catch (error) {
       console.error("Error signing in:", error);
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-      alert(
-        `Error signing in: ${errorMessage}\n\nFull error: ${JSON.stringify(error, Object.getOwnPropertyNames(error))}`
-      );
+      alert(`Error signing in: ${errorMessage}`);
     }
   };
 
