@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, lazy, Suspense } from "react";
+import { useState, useEffect, lazy, Suspense, useCallback } from "react";
 import { SearchFilters } from "@/components/playlists/search-filters";
 import { PlaylistGrid } from "@/components/playlists/playlist-grid";
 import { PlaylistFilters } from "@/lib/types";
@@ -27,7 +27,7 @@ export default function BrowsePage() {
   const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(null);
   const { data: session } = useSession();
   const { playPlaylist, playTrack, isInitialized, playbackState } = usePlayback();
-  
+
   // Initialize the Spotify player
   useSpotifyPlayer();
 
@@ -35,7 +35,7 @@ export default function BrowsePage() {
   useEffect(() => {
     if (session?.user) {
       const hasVisited = localStorage.getItem(FIRST_VISIT_KEY);
-      
+
       if (!hasVisited) {
         setIsFirstVisit(true);
         setShowWelcome(true);
@@ -47,9 +47,9 @@ export default function BrowsePage() {
     }
   }, [session]);
 
-  const handleFiltersChange = (newFilters: PlaylistFilters) => {
+  const handleFiltersChange = useCallback((newFilters: PlaylistFilters) => {
     setFilters(newFilters);
-  };
+  }, []);
 
   const handlePlaylistClick = (playlistId: string) => {
     setSelectedPlaylistId(playlistId);
@@ -61,7 +61,7 @@ export default function BrowsePage() {
 
   const handlePlaylistPlay = async (playlistId: string) => {
     if (!isInitialized) {
-      console.warn('Spotify player not initialized');
+      console.warn("Spotify player not initialized");
       return;
     }
 
@@ -69,34 +69,34 @@ export default function BrowsePage() {
       // Get the playlist details to find the Spotify playlist ID
       const response = await fetch(`/api/playlists/${playlistId}`);
       if (!response.ok) {
-        throw new Error('Failed to get playlist details');
+        throw new Error("Failed to get playlist details");
       }
-      
+
       const playlist = await response.json();
       const spotifyPlaylistId = playlist.spotifyPlaylistId;
-      
+
       if (!spotifyPlaylistId) {
-        throw new Error('Spotify playlist ID not found');
+        throw new Error("Spotify playlist ID not found");
       }
 
       // Convert Spotify playlist ID to URI format
       const playlistUri = `spotify:playlist:${spotifyPlaylistId}`;
       await playPlaylist(playlistUri);
     } catch (error) {
-      console.error('Failed to play playlist:', error);
+      console.error("Failed to play playlist:", error);
     }
   };
 
   const handleTrackPlay = async (trackUri: string) => {
     if (!isInitialized) {
-      console.warn('Spotify player not initialized');
+      console.warn("Spotify player not initialized");
       return;
     }
 
     try {
       await playTrack(trackUri);
     } catch (error) {
-      console.error('Failed to play track:', error);
+      console.error("Failed to play track:", error);
     }
   };
 
@@ -105,10 +105,7 @@ export default function BrowsePage() {
       <main id="main-content" className="container-responsive py-6 sm:py-8">
         {/* Welcome Banner */}
         {showWelcome && session?.user && (
-          <WelcomeBanner
-            userName={session.user.name || "there"}
-            isFirstVisit={isFirstVisit}
-          />
+          <WelcomeBanner userName={session.user.name || "there"} isFirstVisit={isFirstVisit} />
         )}
 
         <div className="mb-6 sm:mb-8 animate-fade-in">
