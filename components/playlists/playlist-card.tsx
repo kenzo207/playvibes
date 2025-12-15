@@ -75,7 +75,7 @@ export function PlaylistCard({
     <AnimatedCard
       hover="lift"
       className={cn(
-        "overflow-hidden animate-fade-in cursor-pointer glass-card border-none",
+        "overflow-hidden animate-fade-in cursor-pointer glass-card border-white/5 dark:border-white/5",
         className
       )}
       style={style}
@@ -84,12 +84,12 @@ export function PlaylistCard({
       aria-label={`Playlist: ${playlist.name} by ${playlist.user.name || "Unknown"}`}
     >
       {/* Playlist Image */}
-      <div className="relative aspect-square group overflow-hidden">
+      <div className="relative aspect-square group overflow-hidden bg-muted">
         <OptimizedImage
           src={playlist.imageUrl || ""}
           alt={playlist.name}
           fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
           fallback={
             <div className="w-full h-full bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center">
@@ -105,17 +105,17 @@ export function PlaylistCard({
 
         {/* Play button overlay - Minimum 44x44px touch target */}
         {onPlay && (
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
             <Button
               size="icon"
-              className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-90 group-hover:scale-100 bg-primary hover:bg-primary/90 shadow-lg min-w-[44px] min-h-[44px] w-12 h-12"
+              className="transform scale-90 group-hover:scale-100 bg-primary text-primary-foreground hover:bg-primary/90 shadow-xl min-w-[48px] min-h-[48px] w-12 h-12 rounded-full border border-white/10"
               onClick={(e) => {
                 e.stopPropagation();
                 handlePlay();
               }}
               aria-label="Play playlist"
             >
-              <Play className="w-6 h-6" aria-hidden="true" />
+              <Play className="w-6 h-6 fill-current" aria-hidden="true" />
             </Button>
           </div>
         )}
@@ -125,7 +125,7 @@ export function PlaylistCard({
       <div className="p-4 space-y-3">
         <div>
           <h3
-            className="font-semibold text-lg line-clamp-1 mb-1 group-hover:text-primary transition-colors"
+            className="font-semibold text-base sm:text-lg line-clamp-1 mb-1 group-hover:text-primary transition-colors"
             id={`playlist-title-${playlist.id}`}
           >
             {playlist.name}
@@ -152,7 +152,7 @@ export function PlaylistCard({
                 playlist.genres.slice(0, 2).map((genre) => (
                   <span
                     key={genre}
-                    className="inline-block px-2 py-1 text-xs bg-primary/10 text-primary rounded-full"
+                    className="inline-block px-2 py-0.5 text-[10px] uppercase tracking-wider font-semibold bg-primary/10 text-primary rounded-sm"
                   >
                     {genre}
                   </span>
@@ -161,7 +161,7 @@ export function PlaylistCard({
                 playlist.moods.slice(0, 2).map((mood) => (
                   <span
                     key={mood}
-                    className="inline-block px-2 py-1 text-xs bg-secondary/80 text-secondary-foreground rounded-full"
+                    className="inline-block px-2 py-0.5 text-[10px] uppercase tracking-wider font-semibold bg-secondary text-secondary-foreground rounded-sm"
                   >
                     {mood}
                   </span>
@@ -182,10 +182,10 @@ export function PlaylistCard({
         {/* Actions - Minimum 44x44px touch targets */}
         {showActions && (
           <div
-            className="flex items-center justify-between min-h-[44px]"
+            className="flex items-center justify-between min-h-[44px] pt-1 border-t border-border/50"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center space-x-1">
+            <div className="flex items-center space-x-3">
               <LikeButton
                 playlistId={localPlaylist.id}
                 initialLikesCount={localPlaylist.likesCount}
@@ -194,11 +194,13 @@ export function PlaylistCard({
               />
 
               <div
-                className="flex items-center space-x-1 px-2"
+                className="flex items-center space-x-1"
                 aria-label={`${localPlaylist.commentsCount} comments`}
               >
-                <MessageCircle className="w-5 h-5 text-muted-foreground" aria-hidden="true" />
-                <span className="text-sm text-muted-foreground">{localPlaylist.commentsCount}</span>
+                <MessageCircle className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
+                <span className="text-xs text-muted-foreground font-medium">
+                  {localPlaylist.commentsCount}
+                </span>
               </div>
             </div>
 
