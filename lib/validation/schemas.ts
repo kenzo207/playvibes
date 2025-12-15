@@ -80,11 +80,14 @@ export function safeValidateData<T>(
   } catch (error) {
     if (error instanceof z.ZodError) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const firstError = (error as any).errors[0];
-      return {
-        success: false,
-        error: firstError.message || "Validation failed",
-      };
+      const errors = (error as any).errors;
+      if (errors && errors.length > 0) {
+        return {
+          success: false,
+          error: errors[0].message || "Validation failed",
+        };
+      }
+      return { success: false, error: error.message || "Validation failed" };
     }
     return { success: false, error: "Invalid data" };
   }

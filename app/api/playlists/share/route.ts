@@ -34,7 +34,13 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     // Validate input
-    const validation = safeValidateData(playlistSchema, body);
+    let validation;
+    try {
+      validation = safeValidateData(playlistSchema, body);
+    } catch (e) {
+      console.error("Validation error:", e);
+      return NextResponse.json({ error: "Invalid request data format" }, { status: 400 });
+    }
 
     if (!validation.success) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
