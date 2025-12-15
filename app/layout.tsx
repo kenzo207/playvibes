@@ -33,7 +33,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-primary/30 relative min-h-screen overflow-x-hidden`}
+      >
+        {/* Global Dynamic Background */}
+        <div className="fixed inset-0 -z-10">
+          <div className="absolute inset-0 mesh-gradient opacity-15"></div>
+          <div className="absolute inset-0 bg-background/50 backdrop-blur-[2px]"></div>
+        </div>
+
         {/* Skip to main content link for keyboard navigation */}
         <a href="#main-content" className="skip-to-main">
           Skip to main content

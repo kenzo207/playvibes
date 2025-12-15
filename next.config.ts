@@ -33,6 +33,22 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "lineup-images.scdn.co",
+      },
+      {
+        protocol: "https",
+        hostname: "newjams-images.spotifycdn.com",
+      },
+      {
+        protocol: "https",
+        hostname: "daily-mix.scdn.co",
+      },
+      {
+        protocol: "https",
+        hostname: "dailymix-images.scdn.co",
+      },
+      {
+        protocol: "https",
         hostname: "images.unsplash.com",
       },
     ],
