@@ -13,7 +13,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import Image from "next/image";
+import { OptimizedImage } from "@/components/ui/optimized-image";
+import { Check, Import, Trash2, RefreshCw, Lock } from "lucide-react";
 
 interface SpotifyPlaylist {
   id: string;
@@ -352,7 +353,7 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
           </Button>
         </div>
 
-        <div className="grid gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {playlists.map((playlist) => {
             const isShared = sharedPlaylists.has(playlist.id);
             const isToggling = sharingStates[playlist.id];
@@ -362,80 +363,127 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
             return (
               <div
                 key={playlist.id}
-                className="flex items-center space-x-4 p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                className="group relative flex flex-col bg-card border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
               >
-                <div className="flex-shrink-0">
-                  {playlist.imageUrl ? (
-                    <Image
-                      src={playlist.imageUrl}
-                      alt={playlist.name}
-                      width={64}
-                      height={64}
-                      className="rounded-md"
-                    />
-                  ) : (
-                    <div className="w-16 h-16 bg-gray-200 rounded-md flex items-center justify-center">
-                      <span className="text-gray-400 text-xs">No Image</span>
+                {/* Card Image */}
+                <div className="relative aspect-square w-full">
+                  <OptimizedImage
+                    src={playlist.imageUrl || ""}
+                    alt={playlist.name}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    fallback={
+                      <div className="w-full h-full bg-muted flex items-center justify-center">
+                        <span className="text-muted-foreground text-sm">No Image</span>
+                      </div>
+                    }
+                  />
+
+                  {/* Overlay for Owner status / Public status */}
+                  <div className="absolute top-3 left-3 flex gap-2">
+                    {!playlist.isOwner && (
+                      <span className="bg-black/60 backdrop-blur-md text-white text-xs px-2 py-1 rounded-full flex items-center">
+                        <Lock className="w-3 h-3 mr-1" /> Not Owner
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Imported Badge */}
+                  {isShared && (
+                    <div className="absolute top-3 right-3">
+                      <span className="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center shadow-lg animate-in fade-in zoom-in duration-300">
+                        <Check className="w-3 h-3 mr-1" /> Imported
+                      </span>
                     </div>
                   )}
                 </div>
 
-                <div className="flex-grow min-w-0">
-                  <h3 className="font-semibold truncate">{playlist.name}</h3>
-                  {playlist.description && (
-                    <p className="text-sm text-gray-600 truncate">{playlist.description}</p>
-                  )}
-                  <p className="text-xs text-gray-500">
-                    {playlist.trackCount} tracks • {playlist.isPublic ? "Public" : "Private"}
-                    {!playlist.isOwner && ` • by ${playlist.owner.displayName}`}
-                  </p>
+                {/* Card Content */}
+                <div className="flex flex-col flex-grow p-4 space-y-3">
+                  <div className="space-y-1">
+                    <h3
+                      className="font-semibold text-lg leading-tight line-clamp-1"
+                      title={playlist.name}
+                    >
+                      {playlist.name}
+                    </h3>
+                    {playlist.description ? (
+                      <p className="text-sm text-muted-foreground line-clamp-2 min-h-[2.5em]">
+                        {playlist.description}
+                      </p>
+                    ) : (
+                      <p className="text-sm text-muted-foreground italic min-h-[2.5em]">
+                        No description
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex items-center text-xs text-muted-foreground mt-auto pt-2">
+                    <span className="font-medium text-foreground">
+                      {playlist.trackCount} tracks
+                    </span>
+                    <span className="mx-1">•</span>
+                    <span>{playlist.isPublic ? "Public" : "Private"}</span>
+                  </div>
+
+                  {/* Sync Status */}
                   {isShared && sharedData?.updatedAt && (
-                    <p className="text-xs text-gray-400 mt-1">
-                      Last synced: {formatLastSynced(sharedData.updatedAt)}
-                    </p>
+                    <div className="text-xs text-muted-foreground flex items-center pt-1">
+                      <RefreshCw className="w-3 h-3 mr-1" />
+                      Synced {formatLastSynced(sharedData.updatedAt)}
+                    </div>
                   )}
                 </div>
 
-                <div className="flex-shrink-0 flex items-center gap-2">
+                {/* Card Actions */}
+                <div className="p-4 pt-0 mt-auto grid grid-cols-2 gap-2">
                   {playlist.isOwner ? (
                     <>
-                      <Button
-                        variant={isShared ? "destructive" : "default"}
-                        size="sm"
-                        onClick={() => handleToggleShare(playlist)}
-                        disabled={isToggling || isSyncing}
-                      >
-                        {isToggling ? (
-                          <span className="flex items-center gap-2">
-                            <span className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></span>
-                            {isShared ? "Unsharing..." : "Sharing..."}
-                          </span>
-                        ) : (
-                          <>{isShared ? "Unshare" : "Share"}</>
-                        )}
-                      </Button>
-                      {isShared && (
+                      {isShared ? (
+                        <>
+                          <Button
+                            variant="secondary"
+                            className="w-full bg-secondary/80 hover:bg-destructive/10 hover:text-destructive"
+                            size="sm"
+                            onClick={() => handleToggleShare(playlist)}
+                            disabled={isToggling || isSyncing}
+                          >
+                            {isToggling ? "Removing..." : "Remove"}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            className="w-full"
+                            size="sm"
+                            onClick={() => handleSyncPlaylist(playlist.id)}
+                            disabled={isToggling || isSyncing}
+                          >
+                            {isSyncing ? <RefreshCw className="w-4 h-4 animate-spin" /> : "Sync"}
+                          </Button>
+                        </>
+                      ) : (
                         <Button
-                          variant="outline"
+                          className="w-full col-span-2 bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
                           size="sm"
-                          onClick={() => handleSyncPlaylist(playlist.id)}
-                          disabled={isToggling || isSyncing}
+                          onClick={() => handleToggleShare(playlist)}
+                          disabled={isToggling}
                         >
-                          {isSyncing ? (
-                            <span className="flex items-center gap-2">
-                              <span className="animate-spin rounded-full h-3 w-3 border-b-2 border-gray-900"></span>
-                              Syncing...
-                            </span>
+                          {isToggling ? (
+                            <RefreshCw className="w-4 h-4 animate-spin mr-2" />
                           ) : (
-                            "Sync"
+                            <Import className="w-4 h-4 mr-2" />
                           )}
+                          {isToggling ? "Importing..." : "Import to PlayVibes"}
                         </Button>
                       )}
                     </>
                   ) : (
-                    <span className="text-xs text-gray-500 px-3 py-1 bg-gray-100 rounded">
-                      Not Owner
-                    </span>
+                    <Button
+                      variant="ghost"
+                      disabled
+                      className="w-full col-span-2 text-muted-foreground opacity-50"
+                    >
+                      <Lock className="w-4 h-4 mr-2" /> Cannot Import
+                    </Button>
                   )}
                 </div>
               </div>
@@ -451,15 +499,20 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Make playlist private?</AlertDialogTitle>
+            <AlertDialogTitle>Remove from Profile?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will remove the playlist from public view. All likes, comments, and saves will be
-              preserved if you share it again later.
+              This will remove the playlist from your public profile on PlayVibes. Actual playlist
+              on Spotify will NOT be deleted.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmUnshare}>Make Private</AlertDialogAction>
+            <AlertDialogAction
+              onClick={confirmUnshare}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Remove
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
