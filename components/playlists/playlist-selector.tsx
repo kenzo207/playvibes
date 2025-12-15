@@ -52,7 +52,9 @@ interface PlaylistSelectorProps {
 export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelectorProps) {
   const [playlists, setPlaylists] = useState<SpotifyPlaylist[]>([]);
   const [sharedPlaylists, setSharedPlaylists] = useState<Set<string>>(new Set());
-  const [sharedPlaylistsData, setSharedPlaylistsData] = useState<Map<string, SharedPlaylistData>>(new Map());
+  const [sharedPlaylistsData, setSharedPlaylistsData] = useState<Map<string, SharedPlaylistData>>(
+    new Map()
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sharingStates, setSharingStates] = useState<Record<string, boolean>>({});
@@ -90,7 +92,9 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
           playlistsMap.set(p.spotifyPlaylistId, p);
         });
         setSharedPlaylistsData(playlistsMap);
-        setSharedPlaylists(new Set(data.playlists.map((p: SharedPlaylistData) => p.spotifyPlaylistId)));
+        setSharedPlaylists(
+          new Set(data.playlists.map((p: SharedPlaylistData) => p.spotifyPlaylistId))
+        );
       }
     } catch (err) {
       console.error("Failed to fetch shared playlists:", err);
@@ -108,13 +112,13 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
     }
 
     // Optimistic update for sharing
-    setSharedPlaylists(prev => {
+    setSharedPlaylists((prev) => {
       const newSet = new Set(prev);
       newSet.add(playlist.id);
       return newSet;
     });
 
-    setSharingStates(prev => ({ ...prev, [playlist.id]: true }));
+    setSharingStates((prev) => ({ ...prev, [playlist.id]: true }));
 
     try {
       const response = await fetch("/api/playlists/share", {
@@ -144,7 +148,7 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
       onPlaylistToggle?.(playlist.id, newSharingState);
     } catch (err) {
       // Rollback optimistic update
-      setSharedPlaylists(prev => {
+      setSharedPlaylists((prev) => {
         const newSet = new Set(prev);
         newSet.delete(playlist.id);
         return newSet;
@@ -157,24 +161,24 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
         variant: "destructive",
       });
     } finally {
-      setSharingStates(prev => ({ ...prev, [playlist.id]: false }));
+      setSharingStates((prev) => ({ ...prev, [playlist.id]: false }));
     }
   };
 
   const confirmUnshare = async () => {
     if (!confirmUnshareId) return;
 
-    const playlist = playlists.find(p => p.id === confirmUnshareId);
+    const playlist = playlists.find((p) => p.id === confirmUnshareId);
     if (!playlist) return;
 
     // Optimistic update for unsharing
-    setSharedPlaylists(prev => {
+    setSharedPlaylists((prev) => {
       const newSet = new Set(prev);
       newSet.delete(confirmUnshareId);
       return newSet;
     });
 
-    setSharingStates(prev => ({ ...prev, [confirmUnshareId]: true }));
+    setSharingStates((prev) => ({ ...prev, [confirmUnshareId]: true }));
 
     try {
       const response = await fetch("/api/playlists/share", {
@@ -204,7 +208,7 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
       onPlaylistToggle?.(confirmUnshareId, false);
     } catch (err) {
       // Rollback optimistic update
-      setSharedPlaylists(prev => {
+      setSharedPlaylists((prev) => {
         const newSet = new Set(prev);
         newSet.add(confirmUnshareId);
         return newSet;
@@ -217,16 +221,16 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
         variant: "destructive",
       });
     } finally {
-      setSharingStates(prev => ({ ...prev, [confirmUnshareId]: false }));
+      setSharingStates((prev) => ({ ...prev, [confirmUnshareId]: false }));
       setConfirmUnshareId(null);
     }
   };
 
   const handleSyncPlaylist = async (spotifyPlaylistId: string) => {
-    const playlist = playlists.find(p => p.id === spotifyPlaylistId);
+    const playlist = playlists.find((p) => p.id === spotifyPlaylistId);
     const playlistName = playlist?.name || "Playlist";
 
-    setSyncingStates(prev => ({ ...prev, [spotifyPlaylistId]: true }));
+    setSyncingStates((prev) => ({ ...prev, [spotifyPlaylistId]: true }));
 
     try {
       const sharedPlaylistData = sharedPlaylistsData.get(spotifyPlaylistId);
@@ -264,7 +268,7 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
         variant: "destructive",
       });
     } finally {
-      setSyncingStates(prev => ({ ...prev, [spotifyPlaylistId]: false }));
+      setSyncingStates((prev) => ({ ...prev, [spotifyPlaylistId]: false }));
     }
   };
 
@@ -280,7 +284,7 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
     if (diffMins < 60) return `${diffMins}m ago`;
     if (diffHours < 24) return `${diffHours}h ago`;
     if (diffDays < 7) return `${diffDays}d ago`;
-    
+
     return date.toLocaleDateString();
   };
 
@@ -300,11 +304,13 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
       <div className={`space-y-4 ${className}`}>
         <div className="text-center py-8">
           <p className="text-red-600 mb-4">{error}</p>
-          <Button onClick={() => {
-            setError(null);
-            setLoading(true);
-            fetchUserPlaylists();
-          }}>
+          <Button
+            onClick={() => {
+              setError(null);
+              setLoading(true);
+              fetchUserPlaylists();
+            }}
+          >
             Try Again
           </Button>
         </div>
@@ -316,7 +322,9 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
     return (
       <div className={`space-y-4 ${className}`}>
         <div className="text-center py-8">
-          <p className="text-gray-600">No playlists found. Create some playlists in Spotify first!</p>
+          <p className="text-gray-600">
+            No playlists found. Create some playlists in Spotify first!
+          </p>
         </div>
       </div>
     );
@@ -325,11 +333,23 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
   return (
     <>
       <div className={`space-y-4 ${className}`}>
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2">Your Playlists</h2>
-          <p className="text-gray-600">
-            Choose which playlists to share publicly. Only playlists you own can be shared.
-          </p>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+          <div>
+            <h2 className="text-2xl font-bold mb-2">Your Playlists</h2>
+            <p className="text-gray-600">
+              Choose which playlists to share. Only owned playlists can be shared.
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            onClick={() => {
+              setLoading(true);
+              fetchUserPlaylists();
+            }}
+            disabled={loading}
+          >
+            Refresh from Spotify
+          </Button>
         </div>
 
         <div className="grid gap-4">
@@ -425,19 +445,21 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
       </div>
 
       {/* Confirmation dialog for unsharing */}
-      <AlertDialog open={confirmUnshareId !== null} onOpenChange={(open) => !open && setConfirmUnshareId(null)}>
+      <AlertDialog
+        open={confirmUnshareId !== null}
+        onOpenChange={(open) => !open && setConfirmUnshareId(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Make playlist private?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will remove the playlist from public view. All likes, comments, and saves will be preserved if you share it again later.
+              This will remove the playlist from public view. All likes, comments, and saves will be
+              preserved if you share it again later.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmUnshare}>
-              Make Private
-            </AlertDialogAction>
+            <AlertDialogAction onClick={confirmUnshare}>Make Private</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
