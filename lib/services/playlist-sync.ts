@@ -24,10 +24,15 @@ export async function syncPlaylistMetadata(
     if (tracksResponse.ok) {
       const tracksData = await tracksResponse.json();
 
+      if (!tracksData || !tracksData.items || !Array.isArray(tracksData.items)) {
+        console.warn("Invalid tracks data:", tracksData);
+        return { success: false, error: "Invalid tracks data" };
+      }
+
       // Extract genres from track artists (simplified approach)
       const artistIds = tracksData.items
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .map((item: any) => item.track?.artists?.[0]?.id)
+        .map((item: any) => item?.track?.artists?.[0]?.id)
         .filter(Boolean)
         .slice(0, 10); // Limit to first 10 artists
 
@@ -39,13 +44,18 @@ export async function syncPlaylistMetadata(
 
         if (artistsResponse.ok) {
           const artistsData = await artistsResponse.json();
-          const allGenres = artistsData.artists
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .flatMap((artist: any) => artist.genres || [])
-            .filter(Boolean) as string[];
 
-          // Get unique genres
-          genres = [...new Set(allGenres)].slice(0, 5);
+          if (artistsData && artistsData.artists && Array.isArray(artistsData.artists)) {
+            const allGenres = artistsData.artists
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              .flatMap((artist: any) => artist?.genres || [])
+              .filter(Boolean) as string[];
+
+            // Get unique genres
+            genres = [...new Set(allGenres)].slice(0, 5);
+          } else {
+            console.warn("Invalid artists data:", artistsData);
+          }
         }
       }
 
