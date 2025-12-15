@@ -60,12 +60,7 @@ export class SpotifyAPI {
       const account = await db
         .select()
         .from(accounts)
-        .where(
-          and(
-            eq(accounts.userId, userId),
-            eq(accounts.provider, "spotify")
-          )
-        )
+        .where(and(eq(accounts.userId, userId), eq(accounts.providerId, "spotify")))
         .limit(1);
 
       if (!account.length || !account[0].accessToken) {
