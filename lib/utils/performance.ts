@@ -78,7 +78,6 @@ export function useThrottle<T>(value: T, delay: number): T {
     const timeSinceLastUpdate = now - lastUpdated.current;
 
     if (timeSinceLastUpdate >= delay) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setThrottledValue(value);
       lastUpdated.current = now;
     } else {

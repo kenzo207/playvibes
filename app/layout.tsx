@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { AuthProvider } from "@/components/auth/auth-provider";
 import { PlaybackProvider } from "@/components/playback/playback-provider";
@@ -10,16 +10,6 @@ import { ErrorBoundary } from "@/components/error-boundary";
 import { GlobalErrorInitializer } from "@/components/global-error-initializer";
 import { SWRProvider } from "@/components/providers/swr-provider";
 import { Navbar } from "@/components/layout/navbar";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "PlayVibes - Share Your Music",
@@ -34,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-primary/30 relative min-h-screen overflow-x-hidden`}
+        className={`antialiased selection:bg-primary/30 relative min-h-screen overflow-x-hidden font-sans`}
       >
         {/* Global Dynamic Background */}
         <div className="fixed inset-0 -z-10">
