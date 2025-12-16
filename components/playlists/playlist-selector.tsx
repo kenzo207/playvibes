@@ -14,6 +14,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { OptimizedImage } from "@/components/ui/optimized-image";
+import { AnimatedCard } from "@/components/ui/animated-card";
 import { Check, Import, Trash2, RefreshCw, Lock } from "lucide-react";
 
 interface SpotifyPlaylist {
@@ -361,20 +362,21 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
             const sharedData = sharedPlaylistsData.get(playlist.id);
 
             return (
-              <div
+              <AnimatedCard
                 key={playlist.id}
-                className="group relative flex flex-col bg-card border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
+                className="group relative flex flex-col overflow-hidden"
+                hover="lift"
               >
                 {/* Card Image */}
-                <div className="relative aspect-square w-full">
+                <div className="relative aspect-square w-full overflow-hidden">
                   <OptimizedImage
                     src={playlist.imageUrl || ""}
                     alt={playlist.name}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     fallback={
-                      <div className="w-full h-full bg-muted flex items-center justify-center">
-                        <span className="text-muted-foreground text-sm">No Image</span>
+                      <div className="w-full h-full bg-muted/30 flex items-center justify-center backdrop-blur-sm">
+                        <span className="text-muted-foreground text-sm font-medium">No Image</span>
                       </div>
                     }
                   />
@@ -382,8 +384,8 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
                   {/* Overlay for Owner status / Public status */}
                   <div className="absolute top-3 left-3 flex gap-2">
                     {!playlist.isOwner && (
-                      <span className="bg-black/60 backdrop-blur-md text-white text-xs px-2 py-1 rounded-full flex items-center">
-                        <Lock className="w-3 h-3 mr-1" /> Not Owner
+                      <span className="bg-black/40 backdrop-blur-md text-white text-xs font-medium px-3 py-1.5 rounded-full flex items-center border border-white/10">
+                        <Lock className="w-3 h-3 mr-1.5" /> Not Owner
                       </span>
                     )}
                   </div>
@@ -391,59 +393,63 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
                   {/* Imported Badge */}
                   {isShared && (
                     <div className="absolute top-3 right-3">
-                      <span className="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center shadow-lg animate-in fade-in zoom-in duration-300">
-                        <Check className="w-3 h-3 mr-1" /> Imported
+                      <span className="bg-primary/90 text-primary-foreground text-xs font-bold px-3 py-1.5 rounded-full flex items-center shadow-lg animate-in fade-in zoom-in duration-300 backdrop-blur-md border border-white/10">
+                        <Check className="w-3 h-3 mr-1.5" /> Imported
                       </span>
                     </div>
                   )}
                 </div>
 
                 {/* Card Content */}
-                <div className="flex flex-col flex-grow p-4 space-y-3">
-                  <div className="space-y-1">
+                <div className="flex flex-col flex-grow p-5 space-y-4">
+                  <div className="space-y-1.5">
                     <h3
-                      className="font-semibold text-lg leading-tight line-clamp-1"
+                      className="font-bold text-lg leading-tight line-clamp-1 group-hover:text-primary transition-colors"
                       title={playlist.name}
                     >
                       {playlist.name}
                     </h3>
                     {playlist.description ? (
-                      <p className="text-sm text-muted-foreground line-clamp-2 min-h-[2.5em]">
+                      <p className="text-sm text-muted-foreground line-clamp-2 min-h-[2.5em] leading-relaxed">
                         {playlist.description}
                       </p>
                     ) : (
-                      <p className="text-sm text-muted-foreground italic min-h-[2.5em]">
+                      <p className="text-sm text-muted-foreground italic min-h-[2.5em] opacity-50">
                         No description
                       </p>
                     )}
                   </div>
 
-                  <div className="flex items-center text-xs text-muted-foreground mt-auto pt-2">
-                    <span className="font-medium text-foreground">
+                  <div className="flex items-center text-xs font-medium text-muted-foreground mt-auto pt-2">
+                    <span className="bg-secondary/50 px-2.5 py-1 rounded-full text-foreground/80">
                       {playlist.trackCount} tracks
                     </span>
-                    <span className="mx-1">•</span>
-                    <span>{playlist.isPublic ? "Public" : "Private"}</span>
+                    <span className="mx-2 opacity-50">•</span>
+                    <span
+                      className={playlist.isPublic ? "text-green-500" : "text-muted-foreground"}
+                    >
+                      {playlist.isPublic ? "Public" : "Private"}
+                    </span>
                   </div>
 
                   {/* Sync Status */}
                   {isShared && sharedData?.updatedAt && (
-                    <div className="text-xs text-muted-foreground flex items-center pt-1">
-                      <RefreshCw className="w-3 h-3 mr-1" />
+                    <div className="text-xs text-muted-foreground flex items-center pt-1 bg-muted/30 p-2 rounded-lg">
+                      <RefreshCw className="w-3 h-3 mr-2" />
                       Synced {formatLastSynced(sharedData.updatedAt)}
                     </div>
                   )}
                 </div>
 
                 {/* Card Actions */}
-                <div className="p-4 pt-0 mt-auto grid grid-cols-2 gap-2">
+                <div className="p-5 pt-0 mt-auto grid grid-cols-2 gap-3">
                   {playlist.isOwner ? (
                     <>
                       {isShared ? (
                         <>
                           <Button
                             variant="secondary"
-                            className="w-full bg-secondary/80 hover:bg-destructive/10 hover:text-destructive"
+                            className="w-full bg-secondary/80 hover:bg-destructive/10 hover:text-destructive transition-colors shadow-none border-0"
                             size="sm"
                             onClick={() => handleToggleShare(playlist)}
                             disabled={isToggling || isSyncing}
@@ -452,7 +458,7 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
                           </Button>
                           <Button
                             variant="outline"
-                            className="w-full"
+                            className="w-full border-primary/20 hover:bg-primary/5 hover:text-primary transition-colors"
                             size="sm"
                             onClick={() => handleSyncPlaylist(playlist.id)}
                             disabled={isToggling || isSyncing}
@@ -462,7 +468,7 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
                         </>
                       ) : (
                         <Button
-                          className="w-full col-span-2 bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
+                          className="w-full col-span-2 bg-primary text-primary-foreground hover:bg-primary/90 shadow-md hover:shadow-lg hover:shadow-primary/20 transition-all font-semibold h-10"
                           size="sm"
                           onClick={() => handleToggleShare(playlist)}
                           disabled={isToggling}
@@ -480,13 +486,13 @@ export function PlaylistSelector({ onPlaylistToggle, className }: PlaylistSelect
                     <Button
                       variant="ghost"
                       disabled
-                      className="w-full col-span-2 text-muted-foreground opacity-50"
+                      className="w-full col-span-2 text-muted-foreground opacity-50 bg-muted/50"
                     >
                       <Lock className="w-4 h-4 mr-2" /> Cannot Import
                     </Button>
                   )}
                 </div>
-              </div>
+              </AnimatedCard>
             );
           })}
         </div>

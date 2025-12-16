@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, lazy, Suspense, useCallback } from "react";
-import { SearchFilters } from "@/components/playlists/search-filters";
+import { FloatingSearchFilters } from "@/components/playlists/floating-search-filters";
 import { PlaylistGrid } from "@/components/playlists/playlist-grid";
 import { PlaylistFilters } from "@/lib/types";
 import { usePlayback } from "@/components/playback/playback-provider";
@@ -102,41 +102,48 @@ export default function BrowsePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-      <main id="main-content" className="container-responsive py-6 sm:py-8">
+      <main id="main-content" className="container-responsive py-8 sm:py-12 relative z-10">
         {/* Welcome Banner */}
         {showWelcome && session?.user && (
-          <WelcomeBanner userName={session.user.name || "there"} isFirstVisit={isFirstVisit} />
+          <div className="mb-8">
+            <WelcomeBanner userName={session.user.name || "there"} isFirstVisit={isFirstVisit} />
+          </div>
         )}
 
-        <div className="mb-6 sm:mb-8 animate-fade-in">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-            Discover Playlists
+        {/* Hero Section */}
+        <div className="text-center mb-12 animate-slide-up">
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black mb-6 tracking-tight">
+            <span className="block text-foreground/90">Find Your</span>
+            <span className="bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient-x bg-200%">
+              Next Favorite Vibe
+            </span>
           </h1>
-          <p className="text-muted-foreground text-sm sm:text-base">
-            Browse and discover playlists shared by the community
+          <p className="text-xl text-muted-foreground/80 max-w-2xl mx-auto leading-relaxed">
+            Explore curated collections from the community. Playlists for every mood, moment, and
+            memory.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
-          {/* Filters Sidebar */}
-          <div className="lg:col-span-1 order-2 lg:order-1">
-            <div className="lg:sticky lg:top-24">
-              <ErrorBoundary>
-                <SearchFilters onFiltersChange={handleFiltersChange} />
-              </ErrorBoundary>
-            </div>
-          </div>
+        {/* Floating Filters */}
+        <div className="sticky top-4 z-40 mb-12" id="filters-container">
+          <ErrorBoundary>
+            <FloatingSearchFilters
+              onFiltersChange={handleFiltersChange}
+              className="animate-scale-in"
+            />
+          </ErrorBoundary>
+        </div>
 
-          {/* Playlist Grid */}
-          <div className="lg:col-span-3 order-1 lg:order-2">
-            <ErrorBoundary>
-              <PlaylistGrid
-                filters={filters}
-                onPlaylistPlay={handlePlaylistPlay}
-                onPlaylistClick={handlePlaylistClick}
-              />
-            </ErrorBoundary>
-          </div>
+        {/* Playlist Grid */}
+        <div className="relative min-h-[400px]">
+          <ErrorBoundary>
+            <PlaylistGrid
+              filters={filters}
+              onPlaylistPlay={handlePlaylistPlay}
+              onPlaylistClick={handlePlaylistClick}
+              className="animate-fade-in"
+            />
+          </ErrorBoundary>
         </div>
       </main>
 

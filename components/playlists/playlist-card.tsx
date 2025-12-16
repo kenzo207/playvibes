@@ -152,7 +152,7 @@ export function PlaylistCard({
                 playlist.genres.slice(0, 2).map((genre) => (
                   <span
                     key={genre}
-                    className="inline-block px-2 py-0.5 text-[10px] uppercase tracking-wider font-semibold bg-primary/10 text-primary rounded-sm"
+                    className="inline-block px-2.5 py-1 text-[10px] uppercase tracking-wider font-bold bg-primary/10 text-primary rounded-full border border-primary/10"
                   >
                     {genre}
                   </span>
@@ -161,7 +161,7 @@ export function PlaylistCard({
                 playlist.moods.slice(0, 2).map((mood) => (
                   <span
                     key={mood}
-                    className="inline-block px-2 py-0.5 text-[10px] uppercase tracking-wider font-semibold bg-secondary text-secondary-foreground rounded-sm"
+                    className="inline-block px-2.5 py-1 text-[10px] uppercase tracking-wider font-bold bg-secondary/50 text-secondary-foreground rounded-full border border-secondary/10"
                   >
                     {mood}
                   </span>
@@ -170,7 +170,7 @@ export function PlaylistCard({
                 playlist.activities.slice(0, 1).map((activity) => (
                   <span
                     key={activity}
-                    className="inline-block px-2 py-1 text-xs bg-accent text-accent-foreground rounded-full"
+                    className="inline-block px-2.5 py-1 text-[10px] uppercase tracking-wider font-bold bg-accent text-accent-foreground rounded-full border border-accent/10"
                   >
                     {activity}
                   </span>
