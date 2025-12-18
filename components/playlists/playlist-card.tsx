@@ -75,7 +75,7 @@ export function PlaylistCard({
     <AnimatedCard
       hover="lift"
       className={cn(
-        "overflow-hidden animate-fade-in cursor-pointer glass-card border-white/5 dark:border-white/5",
+        "overflow-hidden animate-fade-in cursor-pointer glass-card border-white/5 hover:border-primary/30 transition-all duration-500",
         className
       )}
       style={style}
@@ -84,63 +84,65 @@ export function PlaylistCard({
       aria-label={`Playlist: ${playlist.name} by ${playlist.user.name || "Unknown"}`}
     >
       {/* Playlist Image */}
-      <div className="relative aspect-square group overflow-hidden bg-muted">
+      <div className="relative aspect-square group overflow-hidden bg-black/40">
         <OptimizedImage
           src={playlist.imageUrl || ""}
           alt={playlist.name}
           fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          className="object-cover transition-transform duration-1000 group-hover:scale-110 opacity-80 group-hover:opacity-100"
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
           fallback={
-            <div className="w-full h-full bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center">
-              <div className="text-muted-foreground text-center">
-                <div className="w-12 h-12 mx-auto mb-2 bg-muted-foreground/20 rounded-full flex items-center justify-center">
-                  <Play className="w-6 h-6" />
-                </div>
-                <span className="text-sm">No Image</span>
+            <div className="w-full h-full bg-gradient-to-br from-white/5 to-white/10 flex items-center justify-center">
+              <div className="text-white/20 text-center">
+                <Play className="w-12 h-12 mx-auto mb-2 opacity-20" />
+                <span className="text-[10px] uppercase tracking-widest font-bold">No Cover</span>
               </div>
             </div>
           }
         />
 
-        {/* Play button overlay - Minimum 44x44px touch target */}
+        {/* Luminous Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
+
+        {/* Play button overlay */}
         {onPlay && (
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 transform scale-90 group-hover:scale-100">
             <Button
               size="icon"
-              className="transform scale-90 group-hover:scale-100 bg-primary text-primary-foreground hover:bg-primary/90 shadow-xl min-w-[48px] min-h-[48px] w-12 h-12 rounded-full border border-white/10"
+              className="bg-primary text-white shadow-[0_0_30px_rgba(139,92,246,0.6)] min-w-[56px] min-h-[56px] w-14 h-14 rounded-full border border-white/20"
               onClick={(e) => {
                 e.stopPropagation();
                 handlePlay();
               }}
               aria-label="Play playlist"
             >
-              <Play className="w-6 h-6 fill-current" aria-hidden="true" />
+              <Play className="w-7 h-7 fill-current" aria-hidden="true" />
             </Button>
           </div>
         )}
       </div>
 
       {/* Playlist Info */}
-      <div className="p-4 space-y-3">
+      <div className="p-6 space-y-4">
         <div>
           <h3
-            className="font-semibold text-base sm:text-lg line-clamp-1 mb-1 group-hover:text-primary transition-colors"
+            className="font-black text-xl tracking-tight line-clamp-1 mb-1 group-hover:text-primary transition-colors duration-300"
             id={`playlist-title-${playlist.id}`}
           >
             {playlist.name}
           </h3>
-          {playlist.description && (
-            <p className="text-sm text-muted-foreground line-clamp-2 mb-2 leading-relaxed">
-              {playlist.description}
-            </p>
-          )}
-          <div className="flex items-center text-xs text-muted-foreground space-x-2">
-            <span className="font-medium">{playlist.trackCount} tracks</span>
-            <span>•</span>
-            <span>by {playlist.user.name || "Unknown"}</span>
+          <div className="flex items-center text-[10px] font-bold uppercase tracking-[0.15em] text-white/40 space-x-2">
+            <span className="text-primary">{playlist.trackCount} tracks</span>
+            <span className="opacity-20">•</span>
+            <span>by {playlist.user.name || "Vibe Curator"}</span>
           </div>
         </div>
+
+        {playlist.description && (
+          <p className="text-sm text-white/50 line-clamp-2 leading-relaxed font-body">
+            {playlist.description}
+          </p>
+        )}
 
         {/* Tags */}
         {((playlist.genres && playlist.genres.length > 0) ||

@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
         spotifyPlaylistId: sharedPlaylists.spotifyPlaylistId,
         name: sharedPlaylists.name,
         description: sharedPlaylists.description,
-        images: sharedPlaylists.images,
+        imageUrl: sharedPlaylists.imageUrl,
         likesCount: sharedPlaylists.likesCount,
         commentsCount: sharedPlaylists.commentsCount,
         createdAt: sharedPlaylists.createdAt,

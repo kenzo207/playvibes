@@ -1,6 +1,18 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
 import { AuthProvider } from "@/components/auth/auth-provider";
 import { PlaybackProvider } from "@/components/playback/playback-provider";
 import { GlobalPlayer } from "@/components/playback/global-player";
@@ -24,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`antialiased selection:bg-primary/30 relative min-h-screen overflow-x-hidden font-sans`}
+        className={`${outfit.variable} ${inter.variable} antialiased selection:bg-primary/30 relative min-h-screen overflow-x-hidden font-outfit`}
       >
         {/* Global Dynamic Background */}
         <div className="fixed inset-0 -z-10">
