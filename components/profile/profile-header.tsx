@@ -1,7 +1,7 @@
 "use client";
 
 import { UserProfileResponse } from "@/lib/types";
-import { Avatar } from "@/components/ui/avatar";
+import Image from "next/image";
 import { Music, Heart, Bookmark } from "lucide-react";
 
 interface ProfileHeaderProps {
@@ -27,10 +27,11 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
             <div className="absolute -inset-0.5 bg-gradient-to-br from-primary to-purple-600 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-500" />
             <div className="relative">
               {user.image ? (
-                <img
+                <Image
                   src={user.image}
                   alt={user.name || "User"}
-                  className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-[6px] border-background shadow-2xl object-cover"
+                  fill
+                  className="rounded-full border-[6px] border-background shadow-2xl object-cover"
                 />
               ) : (
                 <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-[6px] border-background shadow-2xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center">

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useSession } from '@/lib/auth/client';
-import { usePlayback } from '@/components/playback/playback-provider';
+import { useEffect, useState } from "react";
+import { useSession } from "@/lib/auth/client";
+import { usePlayback } from "@/components/playback/playback-provider";
 
 export function useSpotifyPlayer() {
   const { data: session } = useSession();
@@ -18,22 +18,22 @@ export function useSpotifyPlayer() {
 
       try {
         setIsInitializing(true);
-        
+
         // Get a fresh access token for the user
-        const response = await fetch('/api/auth/spotify/status');
+        const response = await fetch("/api/auth/spotify/status");
         if (!response.ok) {
-          throw new Error('Failed to get Spotify status');
+          throw new Error("Failed to get Spotify status");
         }
-        
+
         const data = await response.json();
         if (!data.connected || !data.accessToken) {
-          console.log('Spotify not connected or no access token available');
+          console.warn("Spotify not connected or no access token available");
           return;
         }
 
         await initializePlayer(data.accessToken);
       } catch (err) {
-        console.error('Failed to initialize Spotify player:', err);
+        console.error("Failed to initialize Spotify player:", err);
       } finally {
         setIsInitializing(false);
       }
@@ -52,6 +52,6 @@ export function useSpotifyPlayer() {
   return {
     isInitialized,
     isInitializing,
-    error
+    error,
   };
 }

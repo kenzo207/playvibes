@@ -36,7 +36,6 @@ export const auth = betterAuth({
         "user-modify-playback-state",
       ],
       mapProfileToUser: (profile) => {
-        console.log("Spotify profile received:", profile);
         return {
           // Better Auth handles ID generation. We just map fields.
           email: profile.email,

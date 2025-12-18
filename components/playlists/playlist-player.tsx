@@ -1,10 +1,11 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import { Button } from '@/components/ui/button';
-import { Play, Pause, SkipBack, SkipForward, Volume2 } from 'lucide-react';
-import { spotifyPlaybackService } from '@/lib/spotify/playback';
-import { PlaybackState } from '@/lib/types';
+import { useState, useEffect, useCallback } from "react";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { Play, Pause, SkipBack, SkipForward, Volume2 } from "lucide-react";
+import { spotifyPlaybackService } from "@/lib/spotify/playback";
+import { PlaybackState } from "@/lib/types";
 
 interface PlaylistPlayerProps {
   accessToken: string;
@@ -22,7 +23,7 @@ export function PlaylistPlayer({ accessToken, playlistUri, onError }: PlaylistPl
     volume: 0.5,
     deviceId: null,
     isReady: false,
-    hasSpotifyPremium: false
+    hasSpotifyPremium: false,
   });
   const [isInitialized, setIsInitialized] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,7 +40,7 @@ export function PlaylistPlayer({ accessToken, playlistUri, onError }: PlaylistPl
             if (window.Spotify) {
               resolve();
             } else {
-              spotifyPlaybackService.on('sdk-ready', resolve);
+              spotifyPlaybackService.on("sdk-ready", resolve);
             }
           });
         };
@@ -54,7 +55,7 @@ export function PlaylistPlayer({ accessToken, playlistUri, onError }: PlaylistPl
         }
       } catch (err) {
         if (mounted) {
-          const errorMessage = err instanceof Error ? err.message : 'Failed to initialize player';
+          const errorMessage = err instanceof Error ? err.message : "Failed to initialize player";
           setError(errorMessage);
           onError?.(errorMessage);
         }
@@ -71,11 +72,11 @@ export function PlaylistPlayer({ accessToken, playlistUri, onError }: PlaylistPl
   // Set up event listeners
   useEffect(() => {
     const handleReady = (data: { deviceId: string; hasSpotifyPremium: boolean }) => {
-      setPlaybackState(prev => ({
+      setPlaybackState((prev) => ({
         ...prev,
         deviceId: data.deviceId,
         isReady: true,
-        hasSpotifyPremium: data.hasSpotifyPremium
+        hasSpotifyPremium: data.hasSpotifyPremium,
       }));
     };
 
@@ -89,14 +90,14 @@ export function PlaylistPlayer({ accessToken, playlistUri, onError }: PlaylistPl
       onError?.(errorMessage);
     };
 
-    spotifyPlaybackService.on('ready', handleReady);
-    spotifyPlaybackService.on('state-changed', handleStateChange);
-    spotifyPlaybackService.on('error', handleError);
+    spotifyPlaybackService.on("ready", handleReady);
+    spotifyPlaybackService.on("state-changed", handleStateChange);
+    spotifyPlaybackService.on("error", handleError);
 
     return () => {
-      spotifyPlaybackService.off('ready', handleReady);
-      spotifyPlaybackService.off('state-changed', handleStateChange);
-      spotifyPlaybackService.off('error', handleError);
+      spotifyPlaybackService.off("ready", handleReady);
+      spotifyPlaybackService.off("state-changed", handleStateChange);
+      spotifyPlaybackService.off("error", handleError);
     };
   }, [onError]);
 
@@ -112,7 +113,7 @@ export function PlaylistPlayer({ accessToken, playlistUri, onError }: PlaylistPl
         await spotifyPlaybackService.togglePlay();
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Playback error';
+      const errorMessage = err instanceof Error ? err.message : "Playback error";
       setError(errorMessage);
       onError?.(errorMessage);
     }
@@ -122,7 +123,7 @@ export function PlaylistPlayer({ accessToken, playlistUri, onError }: PlaylistPl
     try {
       await spotifyPlaybackService.previousTrack();
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to skip to previous track';
+      const errorMessage = err instanceof Error ? err.message : "Failed to skip to previous track";
       setError(errorMessage);
       onError?.(errorMessage);
     }
@@ -132,7 +133,7 @@ export function PlaylistPlayer({ accessToken, playlistUri, onError }: PlaylistPl
     try {
       await spotifyPlaybackService.nextTrack();
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to skip to next track';
+      const errorMessage = err instanceof Error ? err.message : "Failed to skip to next track";
       setError(errorMessage);
       onError?.(errorMessage);
     }
@@ -141,7 +142,7 @@ export function PlaylistPlayer({ accessToken, playlistUri, onError }: PlaylistPl
   const formatTime = (ms: number) => {
     const minutes = Math.floor(ms / 60000);
     const seconds = Math.floor((ms % 60000) / 1000);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
   if (error) {
@@ -150,8 +151,7 @@ export function PlaylistPlayer({ accessToken, playlistUri, onError }: PlaylistPl
         <p className="text-red-800 text-sm">
           {playbackState.hasSpotifyPremium === false
             ? "Spotify Premium is required for full playback. Free users can only preview tracks."
-            : error
-          }
+            : error}
         </p>
       </div>
     );
@@ -171,10 +171,12 @@ export function PlaylistPlayer({ accessToken, playlistUri, onError }: PlaylistPl
       {playbackState.currentTrack && (
         <div className="flex items-center space-x-3 mb-4">
           {playbackState.currentTrack.album.images[0] && (
-            <img
+            <Image
               src={playbackState.currentTrack.album.images[0].url}
               alt={playbackState.currentTrack.album.name}
-              className="w-12 h-12 rounded"
+              width={48}
+              height={48}
+              className="rounded shadow-sm"
             />
           )}
           <div className="flex-1 min-w-0">
@@ -182,7 +184,7 @@ export function PlaylistPlayer({ accessToken, playlistUri, onError }: PlaylistPl
               {playbackState.currentTrack.name}
             </p>
             <p className="text-sm text-gray-500 truncate">
-              {playbackState.currentTrack.artists.map(artist => artist.name).join(', ')}
+              {playbackState.currentTrack.artists.map((artist) => artist.name).join(", ")}
             </p>
           </div>
         </div>
@@ -204,11 +206,7 @@ export function PlaylistPlayer({ accessToken, playlistUri, onError }: PlaylistPl
           disabled={!playbackState.isReady}
           className="w-12 h-12 rounded-full"
         >
-          {playbackState.isPlaying ? (
-            <Pause className="w-5 h-5" />
-          ) : (
-            <Play className="w-5 h-5" />
-          )}
+          {playbackState.isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
         </Button>
 
         <Button
@@ -228,7 +226,7 @@ export function PlaylistPlayer({ accessToken, playlistUri, onError }: PlaylistPl
             <div
               className="bg-green-500 h-1 rounded-full transition-all duration-1000"
               style={{
-                width: `${(playbackState.position / playbackState.duration) * 100}%`
+                width: `${(playbackState.position / playbackState.duration) * 100}%`,
               }}
             />
           </div>

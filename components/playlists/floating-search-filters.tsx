@@ -125,26 +125,26 @@ export function FloatingSearchFilters({
       {/* Search Bar - Hero Style */}
       <div className="relative group max-w-3xl mx-auto">
         <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-500" />
-        <div className="relative bg-background/60 backdrop-blur-xl border border-white/10 shadow-2xl rounded-full flex items-center p-2 transition-all focus-within:ring-2 focus-within:ring-primary/50 focus-within:scale-[1.01]">
+        <div className="relative bg-black/40 backdrop-blur-xl border border-white/10 shadow-lg rounded-full flex items-center p-2 transition-all focus-within:ring-2 focus-within:ring-primary/50 focus-within:scale-[1.01] hover:bg-black/50">
           <div className="pl-4 pr-3 text-muted-foreground">
-            <Search className="w-6 h-6" />
+            <Search className="w-5 h-5" />
           </div>
           <input
             type="text"
             placeholder="Search for vibes, genres, or playlists..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-1 bg-transparent border-none focus:outline-none text-lg placeholder:text-muted-foreground/50 h-10"
+            className="flex-1 bg-transparent border-none focus:outline-none text-base placeholder:text-muted-foreground/50 h-10"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
-              className="p-2 hover:bg-muted/50 rounded-full text-muted-foreground transition-colors mr-2"
+              className="p-2 hover:bg-white/10 rounded-full text-muted-foreground transition-colors mr-2"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           )}
-          <div className="hidden sm:block border-l border-white/10 mx-2 h-8" />
+          <div className="hidden sm:block border-l border-white/10 mx-2 h-6" />
           <div className="hidden sm:flex items-center pr-2">
             <select
               value={sortBy}

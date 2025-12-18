@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { getErrorMessage } from "@/lib/utils/api-client";
 
-interface UseOptimisticUpdateOptions<TState, TResult = void> {
+interface UseOptimisticUpdateOptions<TResult = void> {
   mutationFn: () => Promise<TResult>;
   onSuccess?: (data: TResult) => void;
   onError?: (error: Error) => void;
@@ -11,7 +11,7 @@ interface UseOptimisticUpdateOptions<TState, TResult = void> {
   errorMessage?: string;
 }
 
-interface UseOptimisticUpdateReturn<TState> {
+interface UseOptimisticUpdateReturn {
   execute: () => Promise<void>;
   isLoading: boolean;
   error: Error | null;
@@ -19,7 +19,7 @@ interface UseOptimisticUpdateReturn<TState> {
 
 /**
  * Hook for managing optimistic UI updates with automatic rollback on error
- * 
+ *
  * @example
  * const { execute, isLoading } = useOptimisticUpdate({
  *   mutationFn: async () => {
@@ -32,9 +32,9 @@ interface UseOptimisticUpdateReturn<TState> {
  *   errorMessage: 'Failed to like'
  * });
  */
-export function useOptimisticUpdate<TState = void, TResult = void>(
-  options: UseOptimisticUpdateOptions<TState, TResult>
-): UseOptimisticUpdateReturn<TState> {
+export function useOptimisticUpdate<TResult = void>(
+  options: UseOptimisticUpdateOptions<TResult>
+): UseOptimisticUpdateReturn {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const { toast } = useToast();
@@ -47,7 +47,7 @@ export function useOptimisticUpdate<TState = void, TResult = void>(
 
     try {
       const result = await options.mutationFn();
-      
+
       // Call success callback
       options.onSuccess?.(result);
 

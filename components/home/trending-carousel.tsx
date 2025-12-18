@@ -1,57 +1,35 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, PlayCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight, PlayCircle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-// Mock Data
-const TRENDING_PLAYLISTS = [
-  {
-    id: 1,
-    title: "Late Night Lo-Fi",
-    creator: "CosmicBeats",
-    image:
-      "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=600&auto=format&fit=crop",
-    likes: "12k",
-  },
-  {
-    id: 2,
-    title: "Gym Hardstyle",
-    creator: "PumpItUp",
-    image:
-      "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=600&auto=format&fit=crop",
-    likes: "8.5k",
-  },
-  {
-    id: 3,
-    title: "Focus Flow",
-    creator: "StudyWithMe",
-    image:
-      "https://images.unsplash.com/photo-1516280440614-6697288d5d38?q=80&w=600&auto=format&fit=crop",
-    likes: "22k",
-  },
-  {
-    id: 4,
-    title: "Summer 2024",
-    creator: "SunChaser",
-    image:
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=600&auto=format&fit=crop",
-    likes: "5k",
-  },
-  {
-    id: 5,
-    title: "Indie Discoveries",
-    creator: "IndieHead",
-    image:
-      "https://images.unsplash.com/photo-1493225255756-d9584f8606e9?q=80&w=600&auto=format&fit=crop",
-    likes: "15k",
-  },
-];
+import { PlaylistWithDetails } from "@/lib/types";
+import { useRouter } from "next/navigation";
 
 export function TrendingCarousel() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [playlists, setPlaylists] = useState<PlaylistWithDetails[]>([]);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    async function fetchTrending() {
+      try {
+        const res = await fetch("/api/playlists/trending?limit=10");
+        if (res.ok) {
+          const data = await res.json();
+          setPlaylists(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch trending playlists", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchTrending();
+  }, []);
 
   const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
@@ -62,6 +40,18 @@ export function TrendingCarousel() {
       });
     }
   };
+
+  if (loading) {
+    return (
+      <section className="py-24 border-y border-white/5 bg-white/2 dark:bg-white/[0.02]">
+        <div className="container-responsive flex justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+        </div>
+      </section>
+    );
+  }
+
+  if (playlists.length === 0) return null;
 
   return (
     <section className="py-24 border-y border-white/5 bg-white/2 dark:bg-white/[0.02]">
@@ -96,32 +86,45 @@ export function TrendingCarousel() {
           className="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory hide-scrollbar"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {TRENDING_PLAYLISTS.map((playlist) => (
-            <div
-              key={playlist.id}
-              className="min-w-[280px] md:min-w-[320px] snap-start group relative rounded-2xl overflow-hidden aspect-square cursor-pointer"
-            >
-              <Image
-                src={playlist.image}
-                alt={playlist.title}
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+          {playlists.map((playlist) => {
+            // Parse images if stored as JSON string or use array
+            let imageUrl = "/placeholder-playlist.jpg";
+            if (Array.isArray(playlist.images) && playlist.images.length > 0) {
+              imageUrl = playlist.images[0].url;
+            }
 
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <PlayCircle className="w-16 h-16 text-white drop-shadow-lg scale-90 group-hover:scale-100 transition-transform" />
-              </div>
+            return (
+              <div
+                key={playlist.id}
+                className="min-w-[280px] md:min-w-[320px] snap-start group relative rounded-2xl overflow-hidden aspect-square cursor-pointer bg-white/5"
+                onClick={() => router.push(`/browse?playlist=${playlist.id}`)}
+              >
+                <Image
+                  src={imageUrl}
+                  alt={playlist.name}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
 
-              <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                <h3 className="text-xl font-bold text-white mb-1 line-clamp-1">{playlist.title}</h3>
-                <p className="text-sm text-gray-300 font-medium">{playlist.creator}</p>
-                <div className="mt-3 inline-flex items-center text-xs font-bold text-spotify bg-black/50 backdrop-blur-md px-2 py-1 rounded-md border border-spotify/20">
-                  {playlist.likes} Likes
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <PlayCircle className="w-16 h-16 text-white drop-shadow-lg scale-90 group-hover:scale-100 transition-transform" />
+                </div>
+
+                <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                  <h3 className="text-xl font-bold text-white mb-1 line-clamp-1">
+                    {playlist.name}
+                  </h3>
+                  <p className="text-sm text-gray-300 font-medium">
+                    {playlist.user?.name || "Unknown Creator"}
+                  </p>
+                  <div className="mt-3 inline-flex items-center text-xs font-bold text-spotify bg-black/50 backdrop-blur-md px-2 py-1 rounded-md border border-spotify/20">
+                    {playlist.likesCount || 0} Likes
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

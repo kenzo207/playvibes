@@ -11,14 +11,7 @@ interface VibeCardProps extends React.HTMLAttributes<HTMLDivElement> {
   active?: boolean;
 }
 
-export function VibeCard({
-  title,
-  icon,
-  color = "bg-vibe-purple",
-  active,
-  className,
-  ...props
-}: VibeCardProps) {
+export function VibeCard({ title, icon, active, className, ...props }: VibeCardProps) {
   return (
     <div
       className={cn(

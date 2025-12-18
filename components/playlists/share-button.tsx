@@ -54,7 +54,7 @@ export function ShareButton({
 
       // Reset copied state after 2 seconds
       setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
+    } catch {
       toast({
         title: "Failed to copy",
         description: "Could not copy link to clipboard.",
@@ -85,25 +85,30 @@ export function ShareButton({
           className={cn("flex items-center gap-2 min-h-[44px]", className)}
           aria-label="Share playlist"
         >
-          {copied ? (
-            <Check className="h-5 w-5 text-green-500" />
-          ) : (
-            <Share2 className="h-5 w-5" />
-          )}
+          {copied ? <Check className="h-5 w-5 text-green-500" /> : <Share2 className="h-5 w-5" />}
           {showLabel && <span className="text-sm font-medium">Share</span>}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-52">
-        <DropdownMenuItem onClick={handleCopyLink} className="cursor-pointer min-h-[44px] text-base">
+        <DropdownMenuItem
+          onClick={handleCopyLink}
+          className="cursor-pointer min-h-[44px] text-base"
+        >
           <Link2 className="mr-2 h-5 w-5" />
           <span>Copy link</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleShareFacebook} className="cursor-pointer min-h-[44px] text-base">
+        <DropdownMenuItem
+          onClick={handleShareFacebook}
+          className="cursor-pointer min-h-[44px] text-base"
+        >
           <Facebook className="mr-2 h-5 w-5" />
           <span>Share on Facebook</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleShareTwitter} className="cursor-pointer min-h-[44px] text-base">
+        <DropdownMenuItem
+          onClick={handleShareTwitter}
+          className="cursor-pointer min-h-[44px] text-base"
+        >
           <Twitter className="mr-2 h-5 w-5" />
           <span>Share on Twitter</span>
         </DropdownMenuItem>

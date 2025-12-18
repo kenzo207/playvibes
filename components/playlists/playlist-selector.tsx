@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { OptimizedImage } from "@/components/ui/optimized-image";
 import { AnimatedCard } from "@/components/ui/animated-card";
-import { Check, Import, Trash2, RefreshCw, Lock } from "lucide-react";
+import { Check, Import, RefreshCw, Lock } from "lucide-react";
 
 interface SpotifyPlaylist {
   id: string;

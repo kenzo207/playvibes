@@ -1,22 +1,15 @@
-'use client';
+"use client";
 
-import { usePlayback } from './playback-provider';
-import { PlayerControls } from './player-controls';
-import { ProgressBar } from './progress-bar';
-import { VolumeControl } from './volume-control';
-import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronUp } from 'lucide-react';
-import { useState } from 'react';
+import { usePlayback } from "./playback-provider";
+import { PlayerControls } from "./player-controls";
+import { ProgressBar } from "./progress-bar";
+import { VolumeControl } from "./volume-control";
+import { Button } from "@/components/ui/button";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { useState } from "react";
 
 export function GlobalPlayer() {
-  const {
-    playbackState,
-    togglePlay,
-    previousTrack,
-    nextTrack,
-    seek,
-    setVolume
-  } = usePlayback();
+  const { playbackState, togglePlay, previousTrack, nextTrack, seek, setVolume } = usePlayback();
 
   const [isMinimized, setIsMinimized] = useState(false);
 
@@ -26,7 +19,7 @@ export function GlobalPlayer() {
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-border shadow-2xl z-50 animate-slide-up">
+    <div className="fixed bottom-4 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-3xl bg-black/60 dark:bg-black/80 backdrop-blur-xl border border-white/10 rounded-[2rem] shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-50 animate-slide-up ring-1 ring-white/5 supports-[backdrop-filter]:bg-black/50">
       <div className="container-responsive py-3 sm:py-3">
         {/* Minimize/Expand Button - Minimum 44x44px touch target */}
         <div className="absolute top-2 right-2 sm:right-4">
@@ -37,11 +30,7 @@ export function GlobalPlayer() {
             className="min-w-[44px] min-h-[44px] w-11 h-11 p-0 hover:bg-muted"
             aria-label={isMinimized ? "Expand player" : "Minimize player"}
           >
-            {isMinimized ? (
-              <ChevronUp className="w-5 h-5" />
-            ) : (
-              <ChevronDown className="w-5 h-5" />
-            )}
+            {isMinimized ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
           </Button>
         </div>
 
@@ -62,7 +51,7 @@ export function GlobalPlayer() {
                   {playbackState.currentTrack.name}
                 </p>
                 <p className="text-xs text-muted-foreground truncate">
-                  {playbackState.currentTrack.artists.map(artist => artist.name).join(', ')}
+                  {playbackState.currentTrack.artists.map((artist) => artist.name).join(", ")}
                 </p>
               </div>
             </div>
@@ -98,7 +87,7 @@ export function GlobalPlayer() {
                       {playbackState.currentTrack.name}
                     </p>
                     <p className="text-xs text-muted-foreground truncate">
-                      {playbackState.currentTrack.artists.map(artist => artist.name).join(', ')}
+                      {playbackState.currentTrack.artists.map((artist) => artist.name).join(", ")}
                     </p>
                   </div>
                 </div>
@@ -115,7 +104,7 @@ export function GlobalPlayer() {
                   />
                 </div>
               </div>
-              
+
               {/* Mobile Progress bar */}
               <div className="mt-2">
                 <ProgressBar
@@ -143,7 +132,7 @@ export function GlobalPlayer() {
                     {playbackState.currentTrack.name}
                   </p>
                   <p className="text-xs text-muted-foreground truncate">
-                    {playbackState.currentTrack.artists.map(artist => artist.name).join(', ')}
+                    {playbackState.currentTrack.artists.map((artist) => artist.name).join(", ")}
                   </p>
                 </div>
               </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { PlaylistWithDetails, PaginatedResponse } from "@/lib/types";
 import { PlaylistGrid } from "@/components/playlists/playlist-grid";
 import { Button } from "@/components/ui/button";
@@ -24,18 +24,12 @@ export function ProfilePlaylists({ userId, isOwnProfile, onPlaylistPlay }: Profi
     totalPages: 0,
   });
 
-  useEffect(() => {
-    fetchPlaylists();
-  }, [userId, page]);
-
-  const fetchPlaylists = async () => {
+  const fetchPlaylists = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const response = await fetch(
-        `/api/users/${userId}/playlists?page=${page}&limit=12`
-      );
+      const response = await fetch(`/api/users/${userId}/playlists?page=${page}&limit=12`);
 
       if (!response.ok) {
         throw new Error("Failed to fetch playlists");
@@ -50,7 +44,11 @@ export function ProfilePlaylists({ userId, isOwnProfile, onPlaylistPlay }: Profi
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [userId, page]);
+
+  useEffect(() => {
+    fetchPlaylists();
+  }, [fetchPlaylists]);
 
   const handlePreviousPage = () => {
     if (page > 1) {

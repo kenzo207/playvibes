@@ -11,7 +11,6 @@ import { TrackList } from "./track-list";
 import { PlaylistWithDetails, SpotifyTrack } from "@/lib/types";
 import { apiClient, getErrorMessage } from "@/lib/utils/api-client";
 import { useToast } from "@/components/ui/use-toast";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 interface PlaylistDetailModalProps {
@@ -50,9 +49,7 @@ export function PlaylistDetailModal({
       setIsLoadingPlaylist(true);
       setError(null);
       try {
-        const data = await apiClient.get<PlaylistWithDetails>(
-          `/api/playlists/${playlistId}`
-        );
+        const data = await apiClient.get<PlaylistWithDetails>(`/api/playlists/${playlistId}`);
         setPlaylist(data);
       } catch (error) {
         const errorMessage = getErrorMessage(error);
@@ -170,7 +167,7 @@ export function PlaylistDetailModal({
     const totalMinutes = Math.floor(totalMs / 60000);
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
-    
+
     if (hours > 0) {
       return `${hours} hr ${minutes} min`;
     }
@@ -195,7 +192,10 @@ export function PlaylistDetailModal({
         className="min-h-screen w-full flex items-start justify-center md:p-8"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="w-full max-w-5xl bg-background md:rounded-lg shadow-2xl md:border border-border min-h-screen md:min-h-0" role="document">
+        <div
+          className="w-full max-w-5xl bg-background md:rounded-lg shadow-2xl md:border border-border min-h-screen md:min-h-0"
+          role="document"
+        >
           {/* Close button - Minimum 44x44px touch target */}
           <div className="sticky top-0 z-10 flex justify-end p-3 md:p-4 bg-background/95 backdrop-blur-sm border-b border-border">
             <Button
@@ -241,7 +241,10 @@ export function PlaylistDetailModal({
                 {/* Playlist Info */}
                 <div className="flex-1 space-y-3 md:space-y-4">
                   <div>
-                    <h1 id="playlist-modal-title" className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
+                    <h1
+                      id="playlist-modal-title"
+                      className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2"
+                    >
                       {playlist.name}
                     </h1>
                     {playlist.description && (
@@ -312,11 +315,7 @@ export function PlaylistDetailModal({
                   {/* Action Buttons - Minimum 44x44px touch targets */}
                   <div className="flex flex-wrap items-center gap-2 md:gap-3 pt-2">
                     {onPlay && (
-                      <Button
-                        size="lg"
-                        onClick={handlePlay}
-                        className="gap-2 min-h-[44px] px-6"
-                      >
+                      <Button size="lg" onClick={handlePlay} className="gap-2 min-h-[44px] px-6">
                         <Play className="h-5 w-5" />
                         Play
                       </Button>
@@ -373,10 +372,7 @@ export function PlaylistDetailModal({
               {/* Comments Section */}
               <div className="space-y-4 border-t border-border pt-8">
                 <h2 className="text-2xl font-bold">Comments</h2>
-                <CommentSection
-                  playlistId={playlist.id}
-                  currentUserId={currentUserId}
-                />
+                <CommentSection playlistId={playlist.id} currentUserId={currentUserId} />
               </div>
             </div>
           ) : null}
