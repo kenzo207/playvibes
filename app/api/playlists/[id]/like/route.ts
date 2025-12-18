@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { authOptions } from '@/lib/auth/config'
 import { getUserBySpotifyId } from '@/lib/db/users'
 import { likePlaylist, unlikePlaylist, isPlaylistLiked } from '@/lib/db/playlists'
 
 export async function POST(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
+    const params = await context.params
     try {
         const session = await getServerSession(authOptions)
 

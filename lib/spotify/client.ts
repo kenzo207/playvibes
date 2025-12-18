@@ -45,11 +45,12 @@ export async function savePlaylistToSpotify(
     try {
         // First, get the playlist tracks
         const playlist = await spotifyApi.getPlaylist(playlistId)
-        const trackUris = playlist.body.tracks.items.map(item => item.track.uri)
+        const trackUris = playlist.body.tracks.items
+            .filter(item => item.track !== null)
+            .map(item => item.track!.uri)
 
         // Create a new playlist for the user
-        const newPlaylist = await spotifyApi.createPlaylist(userId, {
-            name: playlist.body.name,
+        const newPlaylist = await spotifyApi.createPlaylist(playlist.body.name, {
             description: playlist.body.description || '',
             public: false,
         })

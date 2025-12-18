@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { authOptions } from '@/lib/auth/config'
 import { getPlaylistById } from '@/lib/db/playlists'
 import { savePlaylistToSpotify } from '@/lib/spotify/client'
 
 export async function POST(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
+    const params = await context.params
     try {
         const session = await getServerSession(authOptions)
 

@@ -4,8 +4,9 @@ import { getPlaylist } from '@/lib/spotify/client'
 
 export async function GET(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
+    const params = await context.params
     try {
         const playlistId = parseInt(params.id)
 
@@ -36,8 +37,9 @@ export async function GET(
 
 export async function DELETE(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
+    const params = await context.params
     try {
         const { unpublishPlaylist } = await import('@/lib/db/playlists')
         await unpublishPlaylist(params.id)

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { authOptions } from '@/lib/auth/config'
 import { getUserPlaylists } from '@/lib/spotify/client'
 import { getUserBySpotifyId } from '@/lib/db/users'
 import { getUserPlaylists as getDbUserPlaylists } from '@/lib/db/playlists'
@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
         const publishedIds = new Set(dbPlaylists.map(p => p.spotify_playlist_id))
 
         // Merge data
-        const playlists = spotifyPlaylists.map(sp => ({
+        const playlists = spotifyPlaylists.map((sp: any) => ({
             id: sp.id,
             name: sp.name,
             description: sp.description,
