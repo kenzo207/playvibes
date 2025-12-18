@@ -1,89 +1,178 @@
 # PlayVibes
 
-<div align="center">
+![PlayVibes Banner](./public/og-image.png)
 
-![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=for-the-badge&logo=postgresql&logoColor=white)
+**Découvrez, partagez et vibrez avec les meilleures playlists Spotify.**
 
-**A modern web application for discovering, sharing, and managing Spotify playlists.**
+PlayVibes est une plateforme musicale sociale moderne qui permet aux utilisateurs de découvrir, partager et sauvegarder des playlists Spotify. Connectez-vous avec une communauté passionnée de musique et partagez vos vibes !
 
-[Features](#features) • [Tech Stack](#tech-stack) • [Quick Start](#quick-start) • [Documentation](#documentation)
+## ✨ Fonctionnalités
 
-</div>
+- 🎵 **Connexion Spotify** - Authentification OAuth sécurisée
+- 📱 **Synchronisation** - Chargez vos playlists Spotify en un clic
+- 🌍 **Découverte** - Explorez des milliers de playlists créées par la communauté
+- 💾 **Sauvegarde** - Ajoutez des playlists directement dans votre Spotify
+- ❤️ **Likes** - Aimez vos playlists préférées
+- 🔍 **Recherche** - Trouvez des playlists par nom, artiste ou genre
+- 🎨 **Design Moderne** - Interface glassmorphism avec gradients vibrants
+
+## 🚀 Technologies
+
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript
+- **Styling**: TailwindCSS
+- **Database**: PostgreSQL
+- **Authentication**: NextAuth.js
+- **API**: Spotify Web API
+- **Animations**: Framer Motion
+
+## 📦 Installation
+
+### Prérequis
+
+- Node.js 18+ 
+- PostgreSQL
+- Compte Spotify Developer
+
+### 1. Cloner le repository
+
+\`\`\`bash
+git clone <repository-url>
+cd playvibes
+\`\`\`
+
+### 2. Installer les dépendances
+
+\`\`\`bash
+npm install
+\`\`\`
+
+### 3. Configuration Spotify OAuth
+
+1. Allez sur [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
+2. Créez une nouvelle application
+3. Ajoutez \`http://localhost:3000/api/auth/callback/spotify\` dans les Redirect URIs
+4. Notez votre Client ID et Client Secret
+
+### 4. Configuration de la base de données
+
+Créez une base de données PostgreSQL et exécutez le schéma :
+
+\`\`\`bash
+psql -U your_user -d playvibes -f db/schema.sql
+\`\`\`
+
+### 5. Variables d'environnement
+
+Copiez \`.env.example\` vers \`.env.local\` et remplissez les valeurs :
+
+\`\`\`bash
+cp .env.example .env.local
+\`\`\`
+
+Modifiez \`.env.local\` :
+
+\`\`\`env
+DATABASE_URL=postgresql://user:password@localhost:5432/playvibes
+SPOTIFY_CLIENT_ID=your_spotify_client_id
+SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+SPOTIFY_REDIRECT_URI=http://localhost:3000/api/auth/callback/spotify
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your_secret_here
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+\`\`\`
+
+Pour générer \`NEXTAUTH_SECRET\` :
+
+\`\`\`bash
+openssl rand -base64 32
+\`\`\`
+
+### 6. Lancer l'application
+
+\`\`\`bash
+npm run dev
+\`\`\`
+
+Ouvrez [http://localhost:3000](http://localhost:3000) dans votre navigateur.
+
+## 🎨 Identité Visuelle
+
+PlayVibes utilise une identité visuelle moderne et dynamique :
+
+- **Couleurs principales** : Violet électrique (#8B5CF6) et Rose vibrant (#EC4899)
+- **Typographie** : Inter (UI) et Outfit (Titres)
+- **Style** : Glassmorphism avec gradients animés
+- **Animations** : Transitions fluides et micro-interactions
+
+## 📁 Structure du Projet
+
+\`\`\`
+playvibes/
+├── app/                    # Pages Next.js (App Router)
+│   ├── api/               # API Routes
+│   ├── browse/            # Page découverte
+│   ├── dashboard/         # Dashboard utilisateur
+│   ├── playlist/[id]/     # Détail playlist
+│   └── page.tsx           # Landing page
+├── components/            # Composants React
+│   ├── ui/               # Composants UI de base
+│   └── layout/           # Layout components
+├── lib/                   # Utilitaires et services
+│   ├── auth/             # Configuration NextAuth
+│   ├── db/               # Fonctions database
+│   └── spotify/          # Client Spotify API
+├── db/                    # Schéma database
+└── public/               # Assets statiques
+\`\`\`
+
+## 🔐 Authentification
+
+PlayVibes utilise NextAuth.js avec le provider Spotify OAuth. Les scopes demandés :
+
+- \`user-read-email\`
+- \`user-read-private\`
+- \`playlist-read-private\`
+- \`playlist-read-collaborative\`
+- \`playlist-modify-public\`
+- \`playlist-modify-private\`
+
+## 🗄️ Base de Données
+
+### Tables
+
+- **users** - Informations utilisateurs
+- **playlists** - Playlists publiées
+- **playlist_likes** - Likes des playlists
+
+Voir \`db/schema.sql\` pour le schéma complet.
+
+## 🚀 Déploiement
+
+### Vercel (Recommandé)
+
+1. Push votre code sur GitHub
+2. Importez le projet sur [Vercel](https://vercel.com)
+3. Configurez les variables d'environnement
+4. Utilisez Vercel Postgres pour la base de données
+5. Déployez !
+
+### Variables d'environnement en production
+
+N'oubliez pas de mettre à jour :
+- \`NEXTAUTH_URL\` avec votre domaine de production
+- \`SPOTIFY_REDIRECT_URI\` avec l'URL de callback de production
+- \`NEXT_PUBLIC_APP_URL\` avec votre domaine
+
+## 📝 License
+
+MIT
+
+## 🤝 Contribution
+
+Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou une pull request.
 
 ---
 
-## Features
-
-- **Secure Authentication**: Seamless integration with Spotify OAuth.
-- **Playlist Discovery**: Advanced filters and search.
-- **Social Interactions**: Share, like, and comment on playlists.
-- **Integrated Playback**: Listen to tracks directly within the app (Spotify Premium required).
-- **Responsive Design**: Optimized for Mobile, Tablet, and Desktop.
-
-## Tech Stack
-
-- **Framework**: [Next.js 16](https://nextjs.org/) (App Router, Turbopack)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Database**: [PostgreSQL](https://www.postgresql.org/) (via [Neon](https://neon.tech/) or Docker)
-- **ORM**: [Drizzle](https://orm.drizzle.team/)
-- **Authentication**: [Better Auth](https://www.better-auth.com/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **Components**: [Radix UI](https://www.radix-ui.com/) & [Lucide Icons](https://lucide.dev/)
-
-## Quick Start
-
-### Prerequisites
-
-- Node.js 18+
-- Docker (for local database)
-- Spotify Developer Account
-
-### Usage
-
-1.  **Clone the repository**
-
-    ```bash
-    git clone https://github.com/kenzo207/playvibes.git
-    cd playvibes
-    ```
-
-2.  **Environment Setup**
-
-    ```bash
-    cp .env.example .env.local
-    # Edit .env.local with your Spotify Credentials
-    ```
-
-3.  **Start Services**
-
-    ```bash
-    ./start.sh
-    ```
-
-    _This script handles dependencies, database migrations, and starts the development server._
-
-4.  **Explore**
-    Open [http://localhost:3000](http://localhost:3000)
-
-## Documentation
-
-- [Start Guide](./START.md) - Detailed local development setup.
-- [Deployment Guide](./DEPLOYMENT.md) - Deploying to Vercel.
-- [Testing Guide](./TESTING.md) - Running and writing tests.
-
-## Contributing
-
-Contributions are welcome. Please follow these steps:
-
-1.  Fork the project
-2.  Create your feature branch (`git checkout -b feature/NewFeature`)
-3.  Commit your changes (`git commit -m 'feat: Add NewFeature'`)
-4.  Push to the branch (`git push origin feature/NewFeature`)
-5.  Open a Pull Request
-
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.
+Fait avec ❤️ et 🎵 par l'équipe PlayVibes
+\`\`\`

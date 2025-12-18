@@ -1,53 +1,48 @@
-import * as React from "react";
-import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/utils";
+import * as React from 'react'
+import { cn } from '@/lib/utils'
 
-const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-semibold tracking-wide ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-95",
-  {
-    variants: {
-      variant: {
-        default:
-          "bg-primary text-primary-foreground shadow-lg hover:shadow-primary/25 hover:scale-105 hover:bg-primary/90",
-        destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm hover:shadow-destructive/25",
-        outline:
-          "border-2 border-input bg-transparent hover:bg-accent hover:text-accent-foreground hover:border-accent transition-colors",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm hover:shadow-md",
-        ghost:
-          "text-muted-foreground hover:text-foreground hover:bg-white/10 dark:hover:bg-white/10",
-        link: "text-primary underline-offset-4 hover:underline",
-        spotify:
-          "bg-[#1DB954] text-white hover:bg-[#1ed760] shadow-lg hover:shadow-[#1DB954]/25 hover:scale-105",
-      },
-      size: {
-        default: "h-11 px-6 py-2 min-h-[44px]",
-        sm: "h-9 rounded-full px-4 min-h-[36px] text-xs",
-        lg: "h-14 rounded-full px-8 min-h-[56px] text-base",
-        icon: "h-11 w-11 min-h-[44px] min-w-[44px] px-0",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  }
-);
-
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    variant?: 'primary' | 'secondary' | 'ghost' | 'outline'
+    size?: 'sm' | 'md' | 'lg'
+    isLoading?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    return (
-      <button className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
-    );
-  }
-);
-Button.displayName = "Button";
+    ({ className, variant = 'primary', size = 'md', isLoading, children, disabled, ...props }, ref) => {
+        const baseStyles = 'inline-flex items-center justify-center rounded-xl font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark-950 disabled:opacity-50 disabled:cursor-not-allowed'
 
-export { Button, buttonVariants };
+        const variants = {
+            primary: 'bg-gradient-primary text-white hover:shadow-lg hover:shadow-primary-600/50 hover:scale-105 focus:ring-primary-600',
+            secondary: 'glass glass-hover text-white focus:ring-primary-600',
+            ghost: 'hover:bg-white/5 text-white/80 hover:text-white',
+            outline: 'border-2 border-white/20 hover:border-white/40 text-white hover:bg-white/5',
+        }
+
+        const sizes = {
+            sm: 'px-4 py-2 text-sm',
+            md: 'px-6 py-3 text-base',
+            lg: 'px-8 py-4 text-lg',
+        }
+
+        return (
+            <button
+                className={cn(baseStyles, variants[variant], sizes[size], className)}
+                ref={ref}
+                disabled={disabled || isLoading}
+                {...props}
+            >
+                {isLoading && (
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                )}
+                {children}
+            </button>
+        )
+    }
+)
+
+Button.displayName = 'Button'
+
+export { Button }

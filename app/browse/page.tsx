@@ -1,178 +1,163 @@
-"use client";
+'use client'
 
-import { useState, useEffect, lazy, Suspense, useCallback } from "react";
-import { FloatingSearchFilters } from "@/components/playlists/floating-search-filters";
-import { PlaylistGrid } from "@/components/playlists/playlist-grid";
-import { PlaylistFilters } from "@/lib/types";
-import { usePlayback } from "@/components/playback/playback-provider";
-import { useSpotifyPlayer } from "@/hooks/use-spotify-player";
-import { WelcomeBanner } from "@/components/auth/welcome-banner";
-import { useSession } from "@/lib/auth/client";
-import { ErrorBoundary } from "@/components/error-boundary";
-import { Loader2 } from "lucide-react";
+import { useState, useEffect } from 'react'
+import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import { Search, Music2, Heart } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
 
-// Lazy load the heavy modal component
-const PlaylistDetailModal = lazy(() =>
-  import("@/components/playlists/playlist-detail-modal").then((mod) => ({
-    default: mod.PlaylistDetailModal,
-  }))
-);
-
-const FIRST_VISIT_KEY = "playvibes_first_visit";
+interface Playlist {
+    id: number
+    name: string
+    description: string | null
+    image_url: string | null
+    track_count: number
+    user_display_name: string
+    user_image_url: string | null
+    likes_count: number
+}
 
 export default function BrowsePage() {
-  const [filters, setFilters] = useState<PlaylistFilters>({});
-  const [isFirstVisit, setIsFirstVisit] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(false);
-  const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(null);
-  const { data: session } = useSession();
-  const { playPlaylist, playTrack, isInitialized, playbackState } = usePlayback();
+    const [playlists, setPlaylists] = useState<Playlist[]>([])
+    const [loading, setLoading] = useState(true)
+    const [searchQuery, setSearchQuery] = useState('')
 
-  // Initialize the Spotify player
-  useSpotifyPlayer();
+    useEffect(() => {
+        loadPlaylists()
+    }, [])
 
-  // Check for first visit
-  useEffect(() => {
-    if (session?.user) {
-      const hasVisited = localStorage.getItem(FIRST_VISIT_KEY);
-
-      if (!hasVisited) {
-        setIsFirstVisit(true);
-        setShowWelcome(true);
-        localStorage.setItem(FIRST_VISIT_KEY, "true");
-      } else {
-        setIsFirstVisit(false);
-        setShowWelcome(true);
-      }
-    }
-  }, [session]);
-
-  const handleFiltersChange = useCallback((newFilters: PlaylistFilters) => {
-    setFilters(newFilters);
-  }, []);
-
-  const handlePlaylistClick = (playlistId: string) => {
-    setSelectedPlaylistId(playlistId);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedPlaylistId(null);
-  };
-
-  const handlePlaylistPlay = async (playlistId: string) => {
-    if (!isInitialized) {
-      console.warn("Spotify player not initialized");
-      return;
+    const loadPlaylists = async () => {
+        setLoading(true)
+        try {
+            const res = await fetch('/api/playlists/public')
+            const data = await res.json()
+            setPlaylists(data.playlists || [])
+        } catch (error) {
+            console.error('Error loading playlists:', error)
+        } finally {
+            setLoading(false)
+        }
     }
 
-    try {
-      // Get the playlist details to find the Spotify playlist ID
-      const response = await fetch(`/api/playlists/${playlistId}`);
-      if (!response.ok) {
-        throw new Error("Failed to get playlist details");
-      }
+    const filteredPlaylists = playlists.filter(playlist =>
+        playlist.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        playlist.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        playlist.user_display_name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
 
-      const playlist = await response.json();
-      const spotifyPlaylistId = playlist.spotifyPlaylistId;
-
-      if (!spotifyPlaylistId) {
-        throw new Error("Spotify playlist ID not found");
-      }
-
-      // Convert Spotify playlist ID to URI format
-      const playlistUri = `spotify:playlist:${spotifyPlaylistId}`;
-      await playPlaylist(playlistUri);
-    } catch (error) {
-      console.error("Failed to play playlist:", error);
-    }
-  };
-
-  const handleTrackPlay = async (trackUri: string) => {
-    if (!isInitialized) {
-      console.warn("Spotify player not initialized");
-      return;
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="spinner w-12 h-12" />
+            </div>
+        )
     }
 
-    try {
-      await playTrack(trackUri);
-    } catch (error) {
-      console.error("Failed to play track:", error);
-    }
-  };
+    return (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            {/* Header */}
+            <div className="mb-12">
+                <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">
+                    Découvrez les <span className="gradient-text">meilleures playlists</span>
+                </h1>
+                <p className="text-xl text-white/60 mb-8">
+                    Explorez des milliers de playlists créées par la communauté
+                </p>
 
-  return (
-    <div className="min-h-screen bg-background">
-      <div className="fixed inset-0 -z-10 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-20"></div>
-      <div className="fixed inset-0 -z-10 mesh-gradient opacity-10"></div>
+                {/* Search */}
+                <div className="relative max-w-2xl">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+                    <Input
+                        type="text"
+                        placeholder="Rechercher une playlist, un artiste, un genre..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-12"
+                    />
+                </div>
+            </div>
 
-      <main id="main-content" className="container-responsive py-8 sm:py-12 relative z-10">
-        {/* Welcome Banner */}
-        {showWelcome && session?.user && (
-          <div className="mb-8">
-            <WelcomeBanner userName={session.user.name || "there"} isFirstVisit={isFirstVisit} />
-          </div>
-        )}
+            {/* Results Count */}
+            <div className="mb-6">
+                <p className="text-white/60">
+                    {filteredPlaylists.length} playlist{filteredPlaylists.length > 1 ? 's' : ''} trouvée{filteredPlaylists.length > 1 ? 's' : ''}
+                </p>
+            </div>
 
-        {/* Hero Section */}
-        <div className="text-center mb-12 animate-slide-up">
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black mb-6 tracking-tight">
-            <span className="block text-foreground/90">Find Your</span>
-            <span className="bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient-x bg-200%">
-              Next Favorite Vibe
-            </span>
-          </h1>
-          <p className="text-xl text-muted-foreground/80 max-w-2xl mx-auto leading-relaxed">
-            Explore curated collections from the community. Playlists for every mood, moment, and
-            memory.
-          </p>
+            {/* Playlists Grid */}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {filteredPlaylists.map((playlist) => (
+                    <Link key={playlist.id} href={`/playlist/${playlist.id}`}>
+                        <Card className="playlist-card h-full">
+                            <div className="relative aspect-square mb-4 overflow-hidden rounded-xl">
+                                {playlist.image_url ? (
+                                    <Image
+                                        src={playlist.image_url}
+                                        alt={playlist.name}
+                                        fill
+                                        className="playlist-card-image object-cover"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full bg-gradient-primary flex items-center justify-center">
+                                        <Music2 className="w-16 h-16 text-white/50" />
+                                    </div>
+                                )}
+                            </div>
+
+                            <h3 className="font-display font-bold text-lg mb-2 line-clamp-1">
+                                {playlist.name}
+                            </h3>
+
+                            {playlist.description && (
+                                <p className="text-sm text-white/60 mb-3 line-clamp-2">
+                                    {playlist.description}
+                                </p>
+                            )}
+
+                            <div className="flex items-center justify-between text-sm">
+                                <div className="flex items-center space-x-2">
+                                    {playlist.user_image_url ? (
+                                        <img
+                                            src={playlist.user_image_url}
+                                            alt={playlist.user_display_name}
+                                            className="w-6 h-6 rounded-full"
+                                        />
+                                    ) : (
+                                        <div className="w-6 h-6 rounded-full bg-gradient-primary" />
+                                    )}
+                                    <span className="text-white/60 line-clamp-1">
+                                        {playlist.user_display_name}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/10">
+                                <span className="text-xs text-white/40">
+                                    {playlist.track_count} tracks
+                                </span>
+                                <div className="flex items-center space-x-1 text-white/40">
+                                    <Heart className="w-4 h-4" />
+                                    <span className="text-xs">{playlist.likes_count}</span>
+                                </div>
+                            </div>
+                        </Card>
+                    </Link>
+                ))}
+            </div>
+
+            {filteredPlaylists.length === 0 && (
+                <div className="text-center py-20">
+                    <Music2 className="w-16 h-16 mx-auto mb-4 text-white/20" />
+                    <h3 className="text-xl font-bold mb-2">Aucune playlist trouvée</h3>
+                    <p className="text-white/60">
+                        {searchQuery
+                            ? 'Essayez avec d\'autres mots-clés'
+                            : 'Soyez le premier à publier une playlist !'}
+                    </p>
+                </div>
+            )}
         </div>
-
-        {/* Floating Filters */}
-        <div className="sticky top-4 z-40 mb-12" id="filters-container">
-          <ErrorBoundary>
-            <FloatingSearchFilters
-              onFiltersChange={handleFiltersChange}
-              className="animate-scale-in"
-            />
-          </ErrorBoundary>
-        </div>
-
-        {/* Playlist Grid */}
-        <div className="relative min-h-[400px]">
-          <ErrorBoundary>
-            <PlaylistGrid
-              filters={filters}
-              onPlaylistPlay={handlePlaylistPlay}
-              onPlaylistClick={handlePlaylistClick}
-              className="animate-fade-in"
-            />
-          </ErrorBoundary>
-        </div>
-      </main>
-
-      {/* Playlist Detail Modal - Lazy Loaded */}
-      {selectedPlaylistId && (
-        <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm flex items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              </div>
-            }
-          >
-            <PlaylistDetailModal
-              playlistId={selectedPlaylistId}
-              isOpen={!!selectedPlaylistId}
-              onClose={handleCloseModal}
-              currentUserId={session?.user?.id}
-              onPlay={handlePlaylistPlay}
-              onTrackPlay={handleTrackPlay}
-              currentTrackId={playbackState.currentTrack?.id}
-              isPlaying={playbackState.isPlaying}
-            />
-          </Suspense>
-        </ErrorBoundary>
-      )}
-    </div>
-  );
+    )
 }
