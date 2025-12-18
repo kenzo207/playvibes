@@ -67,12 +67,14 @@ export function Navbar() {
                                         className="w-9 h-9 rounded-full border-2 border-primary-600"
                                     />
                                 )}
-                                <div className="hidden md:block text-right mr-2">
-                                    <div className="text-sm font-medium text-white">
-                                        {session.user?.name}
+                                {session.user?.name && (
+                                    <div className="hidden md:block text-right mr-2">
+                                        <div className="text-sm font-medium text-white">
+                                            {session.user.name}
+                                        </div>
+                                        <div className="text-xs text-white/60">Connecté</div>
                                     </div>
-                                    <div className="text-xs text-white/60">Connecté</div>
-                                </div>
+                                )}
                                 <Button
                                     variant="outline"
                                     size="sm"
