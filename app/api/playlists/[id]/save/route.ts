@@ -16,7 +16,7 @@ export async function POST(
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
-        const playlistId = parseInt(params.id)
+        const playlistId = params.id
         const playlist = await getPlaylistById(playlistId)
 
         if (!playlist) {

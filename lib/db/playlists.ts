@@ -1,8 +1,8 @@
 import { query } from './client'
 
 export interface Playlist {
-    id: number
-    user_id: number
+    id: string
+    user_id: string
     spotify_playlist_id: string
     name: string
     description: string | null
@@ -30,7 +30,7 @@ export async function getPublicPlaylists(
       p.*,
       u.display_name as user_display_name,
       u.image_url as user_image_url,
-      COUNT(pl.id) as likes_count
+      COUNT(pl.user_id) as likes_count
      FROM playlists p
      JOIN users u ON p.user_id = u.id
      LEFT JOIN playlist_likes pl ON p.id = pl.playlist_id
@@ -43,13 +43,13 @@ export async function getPublicPlaylists(
     return result.rows
 }
 
-export async function getPlaylistById(id: number): Promise<PlaylistWithUser | null> {
+export async function getPlaylistById(id: string): Promise<PlaylistWithUser | null> {
     const result = await query(
         `SELECT 
       p.*,
       u.display_name as user_display_name,
       u.image_url as user_image_url,
-      COUNT(pl.id) as likes_count
+      COUNT(pl.user_id) as likes_count
      FROM playlists p
      JOIN users u ON p.user_id = u.id
      LEFT JOIN playlist_likes pl ON p.id = pl.playlist_id
@@ -60,7 +60,7 @@ export async function getPlaylistById(id: number): Promise<PlaylistWithUser | nu
     return result.rows[0] || null
 }
 
-export async function getUserPlaylists(userId: number): Promise<Playlist[]> {
+export async function getUserPlaylists(userId: string): Promise<Playlist[]> {
     const result = await query(
         'SELECT * FROM playlists WHERE user_id = $1 ORDER BY published_at DESC',
         [userId]
@@ -69,7 +69,7 @@ export async function getUserPlaylists(userId: number): Promise<Playlist[]> {
 }
 
 export async function publishPlaylist(data: {
-    user_id: number
+    user_id: string
     spotify_playlist_id: string
     name: string
     description?: string
@@ -107,14 +107,14 @@ export async function unpublishPlaylist(spotifyPlaylistId: string): Promise<void
     )
 }
 
-export async function likePlaylist(userId: number, playlistId: number): Promise<void> {
+export async function likePlaylist(userId: string, playlistId: string): Promise<void> {
     await query(
         'INSERT INTO playlist_likes (user_id, playlist_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
         [userId, playlistId]
     )
 }
 
-export async function unlikePlaylist(userId: number, playlistId: number): Promise<void> {
+export async function unlikePlaylist(userId: string, playlistId: string): Promise<void> {
     await query(
         'DELETE FROM playlist_likes WHERE user_id = $1 AND playlist_id = $2',
         [userId, playlistId]
@@ -122,8 +122,8 @@ export async function unlikePlaylist(userId: number, playlistId: number): Promis
 }
 
 export async function isPlaylistLiked(
-    userId: number,
-    playlistId: number
+    userId: string,
+    playlistId: string
 ): Promise<boolean> {
     const result = await query(
         'SELECT 1 FROM playlist_likes WHERE user_id = $1 AND playlist_id = $2',

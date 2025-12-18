@@ -8,11 +8,7 @@ export async function GET(
 ) {
     const params = await context.params
     try {
-        const playlistId = parseInt(params.id)
-
-        if (isNaN(playlistId)) {
-            return NextResponse.json({ error: 'Invalid playlist ID' }, { status: 400 })
-        }
+        const playlistId = params.id
 
         const playlist = await getPlaylistById(playlistId)
 

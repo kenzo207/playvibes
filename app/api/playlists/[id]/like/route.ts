@@ -22,7 +22,7 @@ export async function POST(
             return NextResponse.json({ error: 'User not found' }, { status: 404 })
         }
 
-        const playlistId = parseInt(params.id)
+        const playlistId = params.id
         const isLiked = await isPlaylistLiked(user.id, playlistId)
 
         if (isLiked) {
