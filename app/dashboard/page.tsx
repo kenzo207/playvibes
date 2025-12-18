@@ -157,7 +157,7 @@ export default function DashboardPage() {
                 {playlists.map((playlist) => (
                     <Card key={playlist.id} className="group">
                         <div className="relative aspect-square mb-4 overflow-hidden rounded-xl">
-                            {playlist.images[0]?.url ? (
+                            {playlist.images?.[0]?.url ? (
                                 <Image
                                     src={playlist.images[0].url}
                                     alt={playlist.name}

@@ -221,7 +221,7 @@ export default function PlaylistDetailPage() {
                                 {index + 1}
                             </div>
                             <div className="w-12 h-12 relative rounded overflow-hidden flex-shrink-0">
-                                {track.album.images[0] ? (
+                                {track.album?.images?.[0] ? (
                                     <Image
                                         src={track.album.images[0].url}
                                         alt={track.name}
@@ -237,7 +237,7 @@ export default function PlaylistDetailPage() {
                             <div className="flex-1 min-w-0">
                                 <div className="font-medium truncate">{track.name}</div>
                                 <div className="text-sm text-white/60 truncate">
-                                    {track.artists.map(a => a.name).join(', ')}
+                                    {track.artists?.map(a => a.name).join(', ') || 'Unknown Artist'}
                                 </div>
                             </div>
                             <div className="text-sm text-white/40 flex items-center space-x-1">
