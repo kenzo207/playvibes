@@ -59,7 +59,7 @@ export default function DashboardPage() {
                     spotify_playlist_id: playlist.id,
                     name: playlist.name,
                     description: playlist.description,
-                    image_url: playlist.images[0]?.url,
+                    image_url: playlist.images?.[0]?.url || null,
                     track_count: playlist.tracks.total,
                 }),
             })
