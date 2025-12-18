@@ -42,6 +42,8 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-spotify: var(--spotify);
+  --color-vibe-purple: var(--vibe-purple);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -81,30 +83,35 @@
   --sidebar-accent-foreground: oklch(0.141 0.005 285.823);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.141 0.005 285.823);
+  --spotify: oklch(0.68 0.2 145);
+  --vibe-purple: oklch(0.6 0.25 290);
 }
 
 .dark {
-  --background: oklch(0.08 0.02 260);
-  /* Deep cool dark */
+  /* Deep Anthracite / Black for total immersion */
+  --background: oklch(0.1 0.02 260);
   --foreground: oklch(0.98 0.005 260);
-  --card: oklch(0.11 0.02 260);
-  /* Slightly lighter than bg */
+  /* Card slightly lighter/glassy */
+  --card: oklch(0.13 0.03 260);
   --card-foreground: oklch(0.98 0.005 260);
-  --popover: oklch(0.11 0.02 260);
+  --popover: oklch(0.13 0.03 260);
   --popover-foreground: oklch(0.98 0.005 260);
+  /* Primary replaced by Neon Violet or White depending on component, but keeping a base primary usually white in dark mode or brand color */
   --primary: oklch(0.98 0.005 260);
   --primary-foreground: oklch(0.08 0.02 260);
-  --secondary: oklch(0.15 0.03 260);
+  --secondary: oklch(0.2 0.04 260);
   --secondary-foreground: oklch(0.98 0.005 260);
-  --muted: oklch(0.15 0.03 260);
-  --muted-foreground: oklch(0.7 0.02 260);
-  --accent: oklch(0.15 0.03 260);
+  --muted: oklch(0.2 0.04 260);
+  --muted-foreground: oklch(0.65 0.03 260);
+  --accent: oklch(0.25 0.05 280);
+  /* Slightly purple tinted accent */
   --accent-foreground: oklch(0.98 0.005 260);
   --destructive: oklch(0.396 0.141 25.723);
   --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.18 0.02 260);
-  --input: oklch(0.18 0.02 260);
-  --ring: oklch(0.8 0 0);
+  --border: oklch(0.2 0.03 260);
+  --input: oklch(0.2 0.03 260);
+  --ring: oklch(0.6 0.25 290);
+  /* Neon Violet Ring */
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -112,12 +119,14 @@
   --chart-5: oklch(0.645 0.246 16.439);
   --sidebar: oklch(0.08 0.02 260);
   --sidebar-foreground: oklch(0.98 0.005 260);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary: oklch(0.6 0.25 290);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.15 0.03 260);
   --sidebar-accent-foreground: oklch(0.98 0.005 260);
   --sidebar-border: oklch(0.18 0.02 260);
   --sidebar-ring: oklch(0.8 0 0);
+  --spotify: oklch(0.68 0.2 145);
+  --vibe-purple: oklch(0.6 0.25 290);
 }
 
 @layer base {
@@ -178,23 +187,23 @@
 @layer utilities {
   /* Animation utilities */
   .animate-fade-in {
-    animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.5s ease-out forwards;
   }
 
   .animate-slide-up {
-    animation: slideUp 0.3s ease-out;
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   .animate-slide-down {
-    animation: slideDown 0.3s ease-out;
+    animation: slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   .animate-scale-in {
-    animation: scaleIn 0.2s ease-out;
+    animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   .animate-bounce-in {
-    animation: bounceIn 0.4s ease-out;
+    animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
   }
 
   @keyframes fadeIn {
@@ -210,7 +219,7 @@
   @keyframes slideUp {
     from {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(30px);
     }
 
     to {
@@ -222,7 +231,7 @@
   @keyframes slideDown {
     from {
       opacity: 0;
-      transform: translateY(-20px);
+      transform: translateY(-30px);
     }
 
     to {
@@ -234,7 +243,7 @@
   @keyframes scaleIn {
     from {
       opacity: 0;
-      transform: scale(0.95);
+      transform: scale(0.9);
     }
 
     to {
@@ -271,9 +280,18 @@
     animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
+  .animate-glow {
+    animation: glow 3s ease-in-out infinite alternate;
+  }
+
   .animate-gradient-x {
     animation: gradient-x 15s ease infinite;
     background-size: 200% 200%;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
+    background-size: 200% 100%;
   }
 
   @keyframes float {
@@ -290,6 +308,20 @@
     }
   }
 
+  @keyframes glow {
+    from {
+      box-shadow:
+        0 0 10px -5px var(--vibe-purple),
+        0 0 5px -5px var(--color-primary);
+    }
+
+    to {
+      box-shadow:
+        0 0 25px 5px var(--vibe-purple),
+        0 0 10px 5px var(--color-primary);
+    }
+  }
+
   @keyframes gradient-x {
     0% {
       background-position: 0% 50%;
@@ -301,6 +333,16 @@
 
     100% {
       background-position: 0% 50%;
+    }
+  }
+
+  @keyframes shimmer {
+    from {
+      background-position: 200% 0;
+    }
+
+    to {
+      background-position: -200% 0;
     }
   }
 
@@ -366,26 +408,9 @@
     @apply text-lg sm:text-xl;
   }
 
-  /* Safe area padding for mobile devices with notches */
-  .safe-area-inset-top {
-    padding-top: env(safe-area-inset-top);
-  }
-
-  .safe-area-inset-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  .safe-area-inset-left {
-    padding-left: env(safe-area-inset-left);
-  }
-
-  .safe-area-inset-right {
-    padding-right: env(safe-area-inset-right);
-  }
-
   /* Glass effect */
   .glass {
-    @apply bg-white/70 dark:bg-zinc-900/60 backdrop-blur-md border border-white/20 dark:border-white/5 shadow-sm relative overflow-hidden;
+    @apply bg-white/70 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/5 shadow-sm relative overflow-hidden;
   }
 
   .glass::before {
@@ -394,34 +419,35 @@
   }
 
   .glass-card {
-    @apply bg-white/60 dark:bg-zinc-900/40 backdrop-blur-md border border-white/20 dark:border-white/5 shadow-lg hover:shadow-xl transition-all duration-300;
+    @apply bg-white/60 dark:bg-black/30 backdrop-blur-md border border-white/20 dark:border-white/5 shadow-lg hover:shadow-xl transition-all duration-300;
   }
 
   .glass-nav {
-    @apply sticky top-4 z-50 mx-auto max-w-7xl rounded-full border border-white/20 bg-white/70 backdrop-blur-md shadow-lg supports-[backdrop-filter]:bg-white/70 dark:border-white/5 dark:bg-black/60;
+    @apply sticky top-4 z-50 mx-auto max-w-7xl rounded-full border border-white/20 bg-white/70 backdrop-blur-xl shadow-lg supports-[backdrop-filter]:bg-white/70 dark:border-white/5 dark:bg-black/60;
   }
 
   /* Mesh Gradient Background */
   .mesh-gradient {
-    background-color: hsla(0, 100%, 50%, 1);
+    background-color: hsla(250, 50%, 5%, 1);
+    /* Deep base */
     background-image:
-      radial-gradient(at 40% 20%, hsla(28, 100%, 74%, 1) 0px, transparent 50%),
-      radial-gradient(at 80% 0%, hsla(189, 100%, 56%, 1) 0px, transparent 50%),
-      radial-gradient(at 0% 50%, hsla(355, 100%, 93%, 1) 0px, transparent 50%),
-      radial-gradient(at 80% 50%, hsla(340, 100%, 76%, 1) 0px, transparent 50%),
-      radial-gradient(at 0% 100%, hsla(22, 100%, 77%, 1) 0px, transparent 50%),
-      radial-gradient(at 80% 100%, hsla(242, 100%, 70%, 1) 0px, transparent 50%),
-      radial-gradient(at 0% 0%, hsla(343, 100%, 76%, 1) 0px, transparent 50%);
+      radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+      radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+      radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
     background-size: 200% 200%;
     animation: gradient-x 20s ease infinite;
   }
 
   .dark .mesh-gradient {
-    background-color: hsla(240, 10%, 3.9%, 1);
+    background-color: oklch(0.08 0.02 260);
+    /* Match dark bg */
     background-image:
-      radial-gradient(at 40% 20%, hsla(266, 50%, 20%, 0.4) 0px, transparent 50%),
-      radial-gradient(at 80% 0%, hsla(200, 50%, 20%, 0.4) 0px, transparent 50%),
-      radial-gradient(at 0% 50%, hsla(300, 50%, 20%, 0.4) 0px, transparent 50%),
-      radial-gradient(at 80% 50%, hsla(180, 50%, 20%, 0.4) 0px, transparent 50%);
+      radial-gradient(at 10% 20%, oklch(0.15 0.1 290 / 0.3) 0px, transparent 50%),
+      /* Vibe Purple hint */
+        radial-gradient(at 90% 10%, oklch(0.15 0.1 145 / 0.2) 0px, transparent 50%),
+      /* Spotify Green hint */
+        radial-gradient(at 50% 50%, oklch(0.1 0.05 260 / 0.5) 0px, transparent 50%)
+        /* Deep Blue/Black */;
+    filter: blur(40px);
   }
 }
