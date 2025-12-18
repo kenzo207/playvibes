@@ -59,16 +59,22 @@ export function Navbar() {
                         {status === 'loading' ? (
                             <div className="w-32 h-10 glass rounded-xl animate-pulse" />
                         ) : session ? (
-                            <div className="flex items-center space-x-4">
+                            <div className="flex items-center space-x-3">
                                 {session.user?.image && (
                                     <img
                                         src={session.user.image}
                                         alt={session.user.name || 'User'}
-                                        className="w-8 h-8 rounded-full border-2 border-primary-600"
+                                        className="w-9 h-9 rounded-full border-2 border-primary-600"
                                     />
                                 )}
+                                <div className="hidden md:block text-right mr-2">
+                                    <div className="text-sm font-medium text-white">
+                                        {session.user?.name}
+                                    </div>
+                                    <div className="text-xs text-white/60">Connecté</div>
+                                </div>
                                 <Button
-                                    variant="ghost"
+                                    variant="outline"
                                     size="sm"
                                     onClick={() => signOut()}
                                 >
