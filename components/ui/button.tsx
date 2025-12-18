@@ -3,23 +3,29 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-95 shadow-sm",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-semibold tracking-wide ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-95",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-md",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm",
+        default:
+          "bg-primary text-primary-foreground shadow-lg hover:shadow-primary/25 hover:scale-105 hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm hover:shadow-destructive/25",
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground shadow-sm",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground shadow-none",
-        link: "text-primary underline-offset-4 hover:underline shadow-none",
+          "border-2 border-input bg-transparent hover:bg-accent hover:text-accent-foreground hover:border-accent transition-colors",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm hover:shadow-md",
+        ghost:
+          "text-muted-foreground hover:text-foreground hover:bg-white/10 dark:hover:bg-white/10",
+        link: "text-primary underline-offset-4 hover:underline",
+        spotify:
+          "bg-[#1DB954] text-white hover:bg-[#1ed760] shadow-lg hover:shadow-[#1DB954]/25 hover:scale-105",
       },
       size: {
-        default: "h-10 px-6 py-2 min-h-[40px]",
-        sm: "h-9 rounded-full px-4 min-h-[36px]",
-        lg: "h-12 rounded-full px-8 min-h-[48px] text-base",
-        icon: "h-10 w-10 min-h-[40px] min-w-[40px] px-0",
+        default: "h-11 px-6 py-2 min-h-[44px]",
+        sm: "h-9 rounded-full px-4 min-h-[36px] text-xs",
+        lg: "h-14 rounded-full px-8 min-h-[56px] text-base",
+        icon: "h-11 w-11 min-h-[44px] min-w-[44px] px-0",
       },
     },
     defaultVariants: {

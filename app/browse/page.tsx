@@ -101,7 +101,10 @@ export default function BrowsePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+    <div className="min-h-screen bg-background">
+      <div className="fixed inset-0 -z-10 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-20"></div>
+      <div className="fixed inset-0 -z-10 mesh-gradient opacity-10"></div>
+
       <main id="main-content" className="container-responsive py-8 sm:py-12 relative z-10">
         {/* Welcome Banner */}
         {showWelcome && session?.user && (

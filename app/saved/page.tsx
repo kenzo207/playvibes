@@ -24,7 +24,7 @@ export default function SavedPlaylistsPage() {
   const [hasMore, setHasMore] = useState(true);
   const { playPlaylist, isInitialized } = usePlayback();
   const { toast } = useToast();
-  
+
   // Initialize the Spotify player
   useSpotifyPlayer();
 
@@ -33,23 +33,23 @@ export default function SavedPlaylistsPage() {
       if (!append) {
         setLoading(true);
       }
-      
+
       const data: PaginatedResponse<PlaylistWithDetails> = await apiClient.get(
         `/api/playlists/saved?page=${pageNum}&limit=20`
       );
-      
+
       if (append) {
-        setPlaylists(prev => [...prev, ...data.data]);
+        setPlaylists((prev) => [...prev, ...data.data]);
       } else {
         setPlaylists(data.data);
       }
-      
+
       setHasMore(pageNum < data.pagination.totalPages);
       setError(null);
     } catch (err) {
       const errorMessage = getErrorMessage(err);
       setError(errorMessage);
-      
+
       toast({
         title: "Error loading saved playlists",
         description: errorMessage,
@@ -72,18 +72,14 @@ export default function SavedPlaylistsPage() {
   };
 
   const handlePlaylistUpdate = (playlistId: string, updates: Partial<PlaylistWithDetails>) => {
-    setPlaylists(prev => 
-      prev.map(playlist => 
-        playlist.id === playlistId 
-          ? { ...playlist, ...updates }
-          : playlist
-      )
+    setPlaylists((prev) =>
+      prev.map((playlist) => (playlist.id === playlistId ? { ...playlist, ...updates } : playlist))
     );
   };
 
   const handlePlaylistRemove = (playlistId: string) => {
-    setPlaylists(prev => prev.filter(playlist => playlist.id !== playlistId));
-    
+    setPlaylists((prev) => prev.filter((playlist) => playlist.id !== playlistId));
+
     toast({
       title: "Playlist removed",
       description: "Playlist removed from your saved collection",
@@ -106,9 +102,9 @@ export default function SavedPlaylistsPage() {
       // Get the playlist details to find the Spotify playlist ID
       const playlist = await apiClient.get<PlaylistWithDetails>(`/api/playlists/${playlistId}`);
       const spotifyPlaylistId = playlist.spotifyPlaylistId;
-      
+
       if (!spotifyPlaylistId) {
-        throw new Error('Spotify playlist ID not found');
+        throw new Error("Spotify playlist ID not found");
       }
 
       // Convert Spotify playlist ID to URI format
@@ -125,29 +121,30 @@ export default function SavedPlaylistsPage() {
 
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+      <div className="min-h-screen bg-background relative">
+        <div className="fixed inset-0 -z-10 mesh-gradient opacity-10"></div>
+
         <Navigation />
         <main id="main-content" className="container mx-auto px-4 py-8 max-w-7xl">
           {/* Header Section */}
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-3">
-              <div className="p-3 bg-primary/10 rounded-lg">
+              <div className="p-4 bg-primary/10 rounded-2xl ring-1 ring-primary/20 shadow-[0_0_15px_-5px_var(--color-primary)]">
                 <Bookmark className="w-8 h-8 text-primary" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold text-foreground">
-                  Saved Playlists
-                </h1>
+                <h1 className="text-4xl font-bold text-foreground">Saved Playlists</h1>
                 <p className="text-muted-foreground mt-1">
                   Your collection of saved playlists from the community
                 </p>
               </div>
             </div>
-            
+
             {!loading && playlists.length > 0 && (
               <div className="mt-4 p-4 bg-card border rounded-lg">
                 <p className="text-sm text-muted-foreground">
-                  <span className="font-semibold text-foreground">{playlists.length}</span> playlist{playlists.length !== 1 ? 's' : ''} saved
+                  <span className="font-semibold text-foreground">{playlists.length}</span> playlist
+                  {playlists.length !== 1 ? "s" : ""} saved
                 </p>
               </div>
             )}
@@ -182,8 +179,8 @@ export default function SavedPlaylistsPage() {
                 No saved playlists yet
               </h3>
               <p className="text-muted-foreground text-center max-w-md mb-6">
-                Start exploring and save playlists you love to build your personal collection. 
-                Saved playlists will appear here for easy access.
+                Start exploring and save playlists you love to build your personal collection. Saved
+                playlists will appear here for easy access.
               </p>
               <Link href="/browse">
                 <Button size="lg" className="gap-2">

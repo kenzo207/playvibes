@@ -51,7 +51,7 @@ export function Navbar() {
         <nav
           className={cn(
             "rounded-full border transition-all duration-300 px-4 sm:px-6 h-16 flex items-center justify-between",
-            "bg-white/70 dark:bg-black/70 backdrop-blur-md border-white/20 dark:border-white/10 shadow-lg"
+            "bg-background/80 dark:bg-black/40 backdrop-blur-xl border-white/10 shadow-lg supports-[backdrop-filter]:bg-background/60"
           )}
         >
           {/* Logo */}
@@ -79,14 +79,22 @@ export function Navbar() {
                     key={link.href}
                     href={link.href}
                     className={cn(
-                      "relative px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2",
+                      "relative px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 flex items-center gap-2 group",
                       active
-                        ? "text-primary-foreground bg-primary shadow-sm hover:opacity-90"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                        ? "text-white bg-white/10 shadow-[0_0_15px_-5px_var(--vibe-purple)] border border-white/10"
+                        : "text-gray-400 hover:text-white hover:bg-white/5"
                     )}
                   >
-                    <Icon className={cn("w-4 h-4", active ? "text-primary-foreground" : "")} />
+                    <Icon
+                      className={cn(
+                        "w-4 h-4 transition-colors",
+                        active ? "text-vibe-purple" : "text-gray-400 group-hover:text-vibe-purple"
+                      )}
+                    />
                     {link.label}
+                    {active && (
+                      <span className="absolute inset-x-0 -bottom-[19px] h-[2px] bg-gradient-to-r from-transparent via-vibe-purple to-transparent opacity-50 blur-[1px]"></span>
+                    )}
                   </Link>
                 );
               })}
