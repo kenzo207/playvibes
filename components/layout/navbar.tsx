@@ -14,7 +14,6 @@ export function Navbar() {
         { name: 'Découvrir', href: '/browse', icon: Compass },
         ...(session ? [
             { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-            { name: 'Profil', href: `/profile/${session.user?.id}`, icon: User },
         ] : []),
     ]
 
