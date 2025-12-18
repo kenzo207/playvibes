@@ -50,8 +50,8 @@ export function Navbar() {
       >
         <nav
           className={cn(
-            "rounded-full border transition-all duration-300 px-4 sm:px-6 h-16 flex items-center justify-between",
-            "bg-background/80 dark:bg-black/40 backdrop-blur-xl border-white/10 shadow-lg supports-[backdrop-filter]:bg-background/60"
+            "rounded-full border transition-all duration-300 px-4 sm:px-6 h-14 flex items-center justify-between",
+            "bg-background/60 dark:bg-black/20 backdrop-blur-md border-white/5 shadow-md"
           )}
         >
           {/* Logo */}
@@ -59,12 +59,10 @@ export function Navbar() {
             href="/"
             className="flex items-center gap-2 group transition-opacity hover:opacity-80"
           >
-            <div className="bg-primary/10 p-1.5 rounded-full group-hover:bg-primary/20 transition-colors">
-              <Music2 className="h-5 w-5 text-primary animate-pulse-slow" />
+            <div className="bg-primary/20 p-2 rounded-xl group-hover:scale-110 transition-transform">
+              <Music2 className="h-5 w-5 text-primary" />
             </div>
-            <span className="font-bold text-lg tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-              PlayVibes
-            </span>
+            <span className="font-bold text-xl tracking-tight text-white">PlayVibes</span>
           </Link>
 
           {/* Desktop Navigation */}
