@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import { SpotlightCard } from '@/components/ui/spotlight-card'
 import { Music2, RefreshCw, Check, X } from 'lucide-react'
 import Image from 'next/image'
+import { toast } from 'sonner'
 
 interface SpotifyPlaylist {
     id: string
@@ -45,8 +46,14 @@ export default function DashboardPage() {
             const res = await fetch('/api/playlists/spotify')
             const data = await res.json()
             setPlaylists(data.playlists || [])
+            toast.success("Synchronisation terminée !", {
+                description: "Vos playlists Spotify sont à jour."
+            })
         } catch (error) {
-            console.error('Error loading playlists:', error)
+            console.error('Error syncing playlists:', error)
+            toast.error("Échec de la synchronisation", {
+                description: "Vérifiez votre connexion et réessayez."
+            })
         } finally {
             setLoading(false)
         }
@@ -54,7 +61,7 @@ export default function DashboardPage() {
 
     const handlePublish = async (playlist: SpotifyPlaylist) => {
         try {
-            await fetch('/api/playlists', {
+            const res = await fetch('/api/playlists', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -65,26 +72,47 @@ export default function DashboardPage() {
                     track_count: playlist.tracks.total,
                 }),
             })
-
-            setPlaylists(prev =>
-                prev.map(p => p.id === playlist.id ? { ...p, isPublished: true } : p)
-            )
+            if (res.ok) {
+                // Update local state
+                setPlaylists(prev =>
+                    prev.map(p =>
+                        p.id === playlist.id ? { ...p, isPublished: true } : p
+                    )
+                )
+                toast.success(`La playlist "${playlist.name}" a été publiée avec succès !`, {
+                    description: "Elle est maintenant visible par toute la communauté.",
+                    duration: 4000,
+                })
+            } else {
+                toast.error("Erreur lors de la publication", {
+                    description: "Veuillez réessayer plus tard."
+                })
+            }
         } catch (error) {
             console.error('Error publishing playlist:', error)
+            toast.error("Une erreur est survenue")
         }
     }
 
     const handleUnpublish = async (playlist: SpotifyPlaylist) => {
         try {
-            await fetch(`/api/playlists/${playlist.id}`, {
+            const res = await fetch(`/api/playlists/${playlist.id}`, {
                 method: 'DELETE',
             })
-
-            setPlaylists(prev =>
-                prev.map(p => p.id === playlist.id ? { ...p, isPublished: false } : p)
-            )
+            if (res.ok) {
+                // Update local state
+                setPlaylists(prev =>
+                    prev.map(p =>
+                        p.id === playlist.id ? { ...p, isPublished: false } : p
+                    )
+                )
+                toast.info(`La playlist "${playlist.name}" a été retirée`, {
+                    description: "Elle n'est plus visible dans la section Découvrir."
+                })
+            }
         } catch (error) {
             console.error('Error unpublishing playlist:', error)
+            toast.error("Erreur lors du retrait de la playlist")
         }
     }
 
