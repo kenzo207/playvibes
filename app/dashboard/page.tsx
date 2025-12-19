@@ -5,7 +5,9 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
+import { SpotlightCard } from '@/components/ui/spotlight-card'
 import { Music2, RefreshCw, Check, X } from 'lucide-react'
 import Image from 'next/image'
 
@@ -94,8 +96,25 @@ export default function DashboardPage() {
 
     if (status === 'loading' || loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="spinner w-12 h-12" />
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div className="mb-12 space-y-4">
+                    <Skeleton className="h-12 w-64" />
+                    <Skeleton className="h-6 w-96" />
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                        {[1, 2, 3].map((i) => (
+                            <Skeleton key={i} className="h-32 rounded-2xl" />
+                        ))}
+                    </div>
+                </div>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                        <div key={i} className="space-y-4">
+                            <Skeleton className="h-aspect-square w-full rounded-xl aspect-square" />
+                            <Skeleton className="h-6 w-3/4" />
+                            <Skeleton className="h-4 w-1/2" />
+                        </div>
+                    ))}
+                </div>
             </div>
         )
     }
@@ -177,54 +196,56 @@ export default function DashboardPage() {
                 {/* Playlists Grid */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 animate-slide-up" style={{ animationDelay: '0.2s' }}>
                     {playlists.map((playlist) => (
-                        <Card key={playlist.id} className="group hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary-900/20 transition-all duration-300 border-white/5 bg-dark-900/40">
-                            <div className="relative aspect-square mb-5 overflow-hidden rounded-xl bg-dark-800 shadow-md">
-                                {playlist.images?.[0]?.url ? (
-                                    <Image
-                                        src={playlist.images[0].url}
-                                        alt={playlist.name}
-                                        fill
-                                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                    />
-                                ) : (
-                                    <div className="w-full h-full bg-gradient-to-br from-dark-800 to-dark-700 flex items-center justify-center">
-                                        <Music2 className="w-16 h-16 text-white/20" />
-                                    </div>
-                                )}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <SpotlightCard key={playlist.id} className="group hover:-translate-y-1 transition-all duration-300">
+                            <div className="p-6 h-full flex flex-col">
+                                <div className="relative aspect-square mb-5 overflow-hidden rounded-xl bg-dark-800 shadow-md">
+                                    {playlist.images?.[0]?.url ? (
+                                        <Image
+                                            src={playlist.images[0].url}
+                                            alt={playlist.name}
+                                            fill
+                                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full bg-gradient-to-br from-dark-800 to-dark-700 flex items-center justify-center">
+                                            <Music2 className="w-16 h-16 text-white/20" />
+                                        </div>
+                                    )}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                                {playlist.isPublished && (
-                                    <div className="absolute top-3 right-3">
-                                        <Badge variant="success" className="bg-green-500/20 text-green-400 border-green-500/20 backdrop-blur-md shadow-lg shadow-black/20">
-                                            <Check className="w-3 h-3 mr-1" />
-                                            Publié
-                                        </Badge>
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="space-y-3">
-                                <div>
-                                    <h3 className="font-display font-bold text-xl mb-1 line-clamp-1 group-hover:text-primary-400 transition-colors">
-                                        {playlist.name}
-                                    </h3>
-                                    <p className="text-sm text-slate-400 line-clamp-2 min-h-[2.5rem]">
-                                        {playlist.description || 'Aucune description'}
-                                    </p>
-                                </div>
-                                <div className="text-xs font-medium text-slate-500 flex items-center space-x-2">
-                                    <span className="px-2 py-1 rounded bg-white/5 border border-white/5">
-                                        {playlist.tracks.total} tracks
-                                    </span>
+                                    {playlist.isPublished && (
+                                        <div className="absolute top-3 right-3">
+                                            <Badge variant="success" className="bg-green-500/20 text-green-400 border-green-500/20 backdrop-blur-md shadow-lg shadow-black/20">
+                                                <Check className="w-3 h-3 mr-1" />
+                                                Publié
+                                            </Badge>
+                                        </div>
+                                    )}
                                 </div>
 
-                                <div className="pt-2">
+                                <div className="space-y-3 flex-1">
+                                    <div>
+                                        <h3 className="font-display font-bold text-xl mb-1 line-clamp-1 group-hover:text-primary-400 transition-colors">
+                                            {playlist.name}
+                                        </h3>
+                                        <p className="text-sm text-slate-400 line-clamp-2 min-h-[2.5rem]">
+                                            {playlist.description || 'Aucune description'}
+                                        </p>
+                                    </div>
+                                    <div className="text-xs font-medium text-slate-500 flex items-center space-x-2">
+                                        <span className="px-2 py-1 rounded bg-white/5 border border-white/5">
+                                            {playlist.tracks.total} tracks
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="pt-4 mt-auto">
                                     {playlist.isPublished ? (
                                         <Button
                                             variant="outline"
                                             size="sm"
                                             onClick={() => handleUnpublish(playlist)}
-                                            className="w-full border-red-500/20 text-red-400 hover:bg-red-500/10 hover:border-red-500/40"
+                                            className="w-full border-red-500/20 text-red-400 hover:bg-red-500/10 hover:border-red-500/40 relative z-10"
                                         >
                                             <X className="w-4 h-4 mr-2" />
                                             Retirer
@@ -234,7 +255,7 @@ export default function DashboardPage() {
                                             variant="primary"
                                             size="sm"
                                             onClick={() => handlePublish(playlist)}
-                                            className="w-full shadow-lg shadow-primary-900/20"
+                                            className="w-full shadow-lg shadow-primary-900/20 relative z-10"
                                         >
                                             <Check className="w-4 h-4 mr-2" />
                                             Publier
@@ -242,7 +263,7 @@ export default function DashboardPage() {
                                     )}
                                 </div>
                             </div>
-                        </Card>
+                        </SpotlightCard>
                     ))}
                 </div>
 

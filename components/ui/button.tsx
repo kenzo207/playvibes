@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { cn } from '@/lib/utils'
+import { motion } from 'framer-motion'
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: 'primary' | 'secondary' | 'ghost' | 'outline'
@@ -12,7 +13,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         const baseStyles = 'inline-flex items-center justify-center rounded-xl font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark-950 disabled:opacity-50 disabled:cursor-not-allowed'
 
         const variants = {
-            primary: 'bg-gradient-aurora text-white shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 hover:scale-[1.02] active:scale-95 border border-white/10 relative overflow-hidden',
+            primary: 'bg-gradient-aurora text-white shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 border border-white/10 relative overflow-hidden',
             secondary: 'glass hover:bg-white/10 text-white shadow-sm hover:shadow-cyan-500/10 hover:border-white/20',
             ghost: 'hover:bg-white/5 text-slate-300 hover:text-white transition-colors',
             outline: 'border border-white/10 hover:border-cyan-500/50 text-white hover:bg-cyan-500/5',
@@ -25,11 +26,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         }
 
         return (
-            <button
+            <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.95 }}
                 className={cn(baseStyles, variants[variant], sizes[size], className)}
-                ref={ref}
+                ref={ref as any}
                 disabled={disabled || isLoading}
-                {...props}
+                {...props as any}
             >
                 {isLoading && (
                     <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -38,7 +41,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                     </svg>
                 )}
                 {children}
-            </button>
+            </motion.button>
         )
     }
 )

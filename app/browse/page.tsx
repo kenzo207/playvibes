@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
+import { SpotlightCard } from '@/components/ui/spotlight-card'
 import { Search, Music2, Heart } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -49,8 +51,21 @@ export default function BrowsePage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="spinner w-12 h-12" />
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div className="mb-12 space-y-4 text-center">
+                    <Skeleton className="h-16 w-3/4 mx-auto" />
+                    <Skeleton className="h-6 w-1/2 mx-auto" />
+                    <Skeleton className="h-14 w-full max-w-xl mx-auto mt-8 rounded-2xl" />
+                </div>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                        <div key={i} className="space-y-4">
+                            <Skeleton className="w-full aspect-square rounded-xl" />
+                            <Skeleton className="h-6 w-3/4" />
+                            <Skeleton className="h-4 w-1/2" />
+                        </div>
+                    ))}
+                </div>
             </div>
         )
     }
@@ -99,40 +114,42 @@ export default function BrowsePage() {
                 {/* Playlists Grid */}
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-slide-up" style={{ animationDelay: '0.2s' }}>
                     {filteredPlaylists.map((playlist) => (
-                        <Link key={playlist.id} href={`/playlist/${playlist.id}`} className="block h-full">
-                            <Card className="h-full group hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary-900/10 transition-all duration-300 border-white/5 bg-dark-900/40 p-4">
-                                <div className="relative aspect-square mb-4 overflow-hidden rounded-xl bg-dark-800 shadow-md">
-                                    {playlist.image_url ? (
-                                        <Image
-                                            src={playlist.image_url}
-                                            alt={playlist.name}
-                                            fill
-                                            className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full bg-gradient-to-br from-dark-800 to-dark-700 flex items-center justify-center">
-                                            <Music2 className="w-16 h-16 text-white/20" />
-                                        </div>
-                                    )}
-                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                        <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center transform scale-50 group-hover:scale-100 transition-transform duration-300">
-                                            <Music2 className="w-6 h-6 text-white" />
+                        <Link key={playlist.id} href={`/playlist/${playlist.id}`} className="block h-full relative z-0">
+                            <SpotlightCard className="h-full group hover:-translate-y-1 transition-all duration-300">
+                                <div className="p-4 h-full flex flex-col">
+                                    <div className="relative aspect-square mb-4 overflow-hidden rounded-xl bg-dark-800 shadow-md">
+                                        {playlist.image_url ? (
+                                            <Image
+                                                src={playlist.image_url}
+                                                alt={playlist.name}
+                                                fill
+                                                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full bg-gradient-to-br from-dark-800 to-dark-700 flex items-center justify-center">
+                                                <Music2 className="w-16 h-16 text-white/20" />
+                                            </div>
+                                        )}
+                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                            <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center transform scale-50 group-hover:scale-100 transition-transform duration-300">
+                                                <Music2 className="w-6 h-6 text-white" />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div className="space-y-2">
-                                    <h3 className="font-display font-bold text-lg leading-tight line-clamp-1 group-hover:text-primary-400 transition-colors">
-                                        {playlist.name}
-                                    </h3>
+                                    <div className="space-y-2 flex-1">
+                                        <h3 className="font-display font-bold text-lg leading-tight line-clamp-1 group-hover:text-primary-400 transition-colors">
+                                            {playlist.name}
+                                        </h3>
 
-                                    {playlist.description && (
-                                        <p className="text-xs text-slate-500 line-clamp-2 h-8">
-                                            {playlist.description}
-                                        </p>
-                                    )}
+                                        {playlist.description && (
+                                            <p className="text-xs text-slate-500 line-clamp-2 h-8">
+                                                {playlist.description}
+                                            </p>
+                                        )}
+                                    </div>
 
-                                    <div className="pt-2 flex items-center justify-between">
+                                    <div className="pt-2 mt-auto flex items-center justify-between border-t border-white/5">
                                         <div className="flex items-center space-x-2">
                                             {playlist.user_image_url ? (
                                                 <img
@@ -157,14 +174,10 @@ export default function BrowsePage() {
                                                 <Music2 className="w-3 h-3" />
                                                 <span>{playlist.track_count}</span>
                                             </div>
-                                            <div className="flex items-center space-x-1">
-                                                <Heart className="w-3 h-3" />
-                                                <span>{playlist.likes_count}</span>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </Card>
+                            </SpotlightCard>
                         </Link>
                     ))}
                 </div>
