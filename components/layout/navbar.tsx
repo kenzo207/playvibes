@@ -2,9 +2,10 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Music2, Compass, LayoutDashboard, User } from 'lucide-react'
+import { Compass, LayoutDashboard, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useSession, signIn, signOut } from 'next-auth/react'
+import Logo from '@/components/brand/logo'
 
 export function Navbar() {
     const pathname = usePathname()
@@ -18,21 +19,16 @@ export function Navbar() {
     ]
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-50 rounded-2xl glass border border-white/10 shadow-xl shadow-black/20 backdrop-blur-md transition-all duration-300">
+            <div className="px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
                     <Link href="/" className="flex items-center space-x-2 group">
-                        <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                            <Music2 className="w-5 h-5 text-white" />
-                        </div>
-                        <span className="text-xl font-display font-bold gradient-text">
-                            PlayVibes
-                        </span>
+                        <Logo className="w-10 h-10 group-hover:scale-105 transition-transform duration-300" />
                     </Link>
 
                     {/* Navigation */}
-                    <div className="hidden md:flex items-center space-x-1">
+                    <div className="hidden md:flex items-center space-x-1 bg-white/5 rounded-full p-1 border border-white/5">
                         {navigation.map((item) => {
                             const Icon = item.icon
                             const isActive = pathname === item.href
@@ -41,9 +37,9 @@ export function Navbar() {
                                     key={item.name}
                                     href={item.href}
                                     className={cn(
-                                        'px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center space-x-2',
+                                        'px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center space-x-2',
                                         isActive
-                                            ? 'bg-white/10 text-white'
+                                            ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/25'
                                             : 'text-white/60 hover:text-white hover:bg-white/5'
                                     )}
                                 >
@@ -57,28 +53,24 @@ export function Navbar() {
                     {/* Auth Button */}
                     <div>
                         {status === 'loading' ? (
-                            <div className="w-32 h-10 glass rounded-xl animate-pulse" />
+                            <div className="w-32 h-10 glass rounded-full animate-pulse" />
                         ) : session ? (
                             <div className="flex items-center space-x-3">
                                 {session.user?.image && (
-                                    <img
-                                        src={session.user.image}
-                                        alt={session.user.name || 'User'}
-                                        className="w-9 h-9 rounded-full border-2 border-primary-600"
-                                    />
-                                )}
-                                {session.user?.name && (
-                                    <div className="hidden md:block text-right mr-2">
-                                        <div className="text-sm font-medium text-white">
-                                            {session.user.name}
-                                        </div>
-                                        <div className="text-xs text-white/60">Connecté</div>
+                                    <div className="relative group cursor-pointer">
+                                        <div className="absolute inset-0 bg-gradient-brand rounded-full blur opacity-0 group-hover:opacity-50 transition-opacity" />
+                                        <img
+                                            src={session.user.image}
+                                            alt={session.user.name || 'User'}
+                                            className="relative w-9 h-9 rounded-full border-2 border-white/10 group-hover:border-primary-500 transition-colors"
+                                        />
                                     </div>
                                 )}
                                 <Button
-                                    variant="outline"
+                                    variant="ghost"
                                     size="sm"
                                     onClick={() => signOut()}
+                                    className="rounded-full hover:bg-red-500/10 hover:text-red-400"
                                 >
                                     Déconnexion
                                 </Button>
@@ -88,9 +80,9 @@ export function Navbar() {
                                 variant="primary"
                                 size="sm"
                                 onClick={() => signIn('spotify')}
+                                className="rounded-full"
                             >
-                                <Music2 className="w-4 h-4 mr-2" />
-                                Connect with Spotify
+                                <span>Connexion</span>
                             </Button>
                         )}
                     </div>
