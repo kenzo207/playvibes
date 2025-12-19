@@ -56,7 +56,6 @@ export default function BrowsePage() {
     }
 
     return (
-    return (
         <div className="relative min-h-screen">
             {/* Background Effects */}
             <div className="fixed inset-0 pointer-events-none">
