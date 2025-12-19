@@ -10,30 +10,30 @@ const config: Config = {
     theme: {
         extend: {
             colors: {
-                // PlayVibes Brand Colors
+                // Aurora Night Palette
                 primary: {
-                    50: '#faf5ff',
-                    100: '#f3e8ff',
-                    200: '#e9d5ff',
-                    300: '#d8b4fe',
-                    400: '#c084fc',
-                    500: '#a855f7',
-                    600: '#8B5CF6', // Main purple
-                    700: '#7c3aed',
-                    800: '#6d28d9',
-                    900: '#5b21b6',
+                    50: '#ecfeff',
+                    100: '#cffafe',
+                    200: '#a5f3fc',
+                    300: '#67e8f9',
+                    400: '#22d3ee',
+                    500: '#06b6d4', // Electric Cyan
+                    600: '#0891b2',
+                    700: '#0e7490',
+                    800: '#155e75',
+                    900: '#164e63',
                 },
                 accent: {
-                    50: '#fdf2f8',
-                    100: '#fce7f3',
-                    200: '#fbcfe8',
-                    300: '#f9a8d4',
-                    400: '#f472b6',
-                    500: '#EC4899', // Main pink
-                    600: '#db2777',
-                    700: '#be185d',
-                    800: '#9f1239',
-                    900: '#831843',
+                    50: '#f5f3ff',
+                    100: '#ede9fe',
+                    200: '#ddd6fe',
+                    300: '#c4b5fd',
+                    400: '#a78bfa',
+                    500: '#8b5cf6', // Vivid Violet
+                    600: '#7c3aed',
+                    700: '#6d28d9',
+                    800: '#5b21b6',
+                    900: '#4c1d95',
                 },
                 dark: {
                     50: '#f8fafc',
@@ -46,18 +46,19 @@ const config: Config = {
                     700: '#334155',
                     800: '#1e293b',
                     900: '#0f172a',
-                    950: '#020617',
+                    950: '#020617', // Deepest Navy
                 }
             },
             fontFamily: {
                 sans: ['Inter', 'system-ui', 'sans-serif'],
-                display: ['Outfit', 'Inter', 'system-ui', 'sans-serif'],
+                display: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
             },
             backgroundImage: {
                 'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
                 'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-                'gradient-primary': 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%)',
-                'gradient-dark': 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
+                'gradient-primary': 'linear-gradient(135deg, #06b6d4 0%, #8b5cf6 100%)', // Cyan to Violet
+                'gradient-aurora': 'linear-gradient(to right, #06b6d4, #8b5cf6, #d946ef)',
+                'gradient-dark': 'linear-gradient(135deg, #020617 0%, #0f172a 100%)',
             },
             animation: {
                 'fade-in': 'fadeIn 0.5s ease-in-out',
