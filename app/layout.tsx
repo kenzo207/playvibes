@@ -1,6 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter, Outfit } from 'next/font/google'
+import { Inter, Space_Grotesk } from 'next/font/google'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { Providers } from './providers'
@@ -10,9 +10,9 @@ const inter = Inter({
     variable: '--font-inter',
 })
 
-const outfit = Outfit({
+const spaceGrotesk = Space_Grotesk({
     subsets: ['latin'],
-    variable: '--font-outfit',
+    variable: '--font-space-grotesk',
 })
 
 export const metadata: Metadata = {
@@ -50,7 +50,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="fr" className="dark">
-            <body className={`${inter.variable} ${outfit.variable}`}>
+            <body className={`${inter.variable} ${spaceGrotesk.variable}`}>
                 <Providers>
                     <div className="min-h-screen flex flex-col">
                         <Navbar />
