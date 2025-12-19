@@ -101,132 +101,167 @@ export default function DashboardPage() {
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            {/* Header */}
-            <div className="mb-12">
-                <div className="flex items-center justify-between mb-4">
-                    <div>
-                        <h1 className="text-4xl font-display font-bold mb-2">
-                            Mon <span className="gradient-text">Dashboard</span>
-                        </h1>
-                        <p className="text-white/60">
-                            Gérez vos playlists Spotify et publiez-les sur PlayVibes
-                        </p>
-                    </div>
-                    <Button
-                        variant="secondary"
-                        onClick={handleSync}
-                        isLoading={syncing}
-                    >
-                        <RefreshCw className={`w-4 h-4 mr-2 ${syncing ? 'animate-spin' : ''}`} />
-                        Synchroniser
-                    </Button>
-                </div>
+        <div className="relative min-h-screen">
+            {/* Background Effects */}
+            <div className="fixed inset-0 pointer-events-none">
+                <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-primary-900/20 rounded-full blur-[120px] pointer-events-none" />
+                <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-accent-900/20 rounded-full blur-[100px] pointer-events-none" />
+            </div>
 
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-4 mt-8">
-                    <Card>
-                        <CardContent className="pt-6">
-                            <div className="text-3xl font-bold gradient-text mb-1">
+            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                {/* Header */}
+                <div className="mb-12 animate-fade-in">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+                        <div>
+                            <h1 className="text-4xl md:text-5xl font-display font-medium mb-3">
+                                Mon <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-accent-400">Dashboard</span>
+                            </h1>
+                            <p className="text-slate-400 text-lg">
+                                Gérez vos playlists Spotify et publiez-les sur PlayVibes
+                            </p>
+                        </div>
+                        <Button
+                            variant="secondary"
+                            onClick={handleSync}
+                            isLoading={syncing}
+                            className="bg-white/5 border border-white/10 hover:bg-white/10 shadow-lg shadow-black/20"
+                        >
+                            <RefreshCw className={`w-4 h-4 mr-2 ${syncing ? 'animate-spin' : ''}`} />
+                            Synchroniser Spotify
+                        </Button>
+                    </div>
+
+                    {/* Stats */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <Card className="glass p-6 group hover:border-primary-500/30 transition-colors">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="p-3 bg-primary-500/10 rounded-xl text-primary-400 group-hover:scale-110 transition-transform">
+                                    <Music2 className="w-6 h-6" />
+                                </div>
+                                <span className="text-xs font-medium px-2 py-1 rounded-full bg-white/5 border border-white/5 text-white/60">Total</span>
+                            </div>
+                            <div className="text-4xl font-display font-bold text-white mb-1 group-hover:text-primary-400 transition-colors">
                                 {playlists.length}
                             </div>
-                            <div className="text-sm text-white/60">Playlists Spotify</div>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardContent className="pt-6">
-                            <div className="text-3xl font-bold gradient-text mb-1">
+                            <div className="text-sm text-slate-400">Playlists Spotify</div>
+                        </Card>
+
+                        <Card className="glass p-6 group hover:border-green-500/30 transition-colors">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="p-3 bg-green-500/10 rounded-xl text-green-400 group-hover:scale-110 transition-transform">
+                                    <Check className="w-6 h-6" />
+                                </div>
+                                <span className="text-xs font-medium px-2 py-1 rounded-full bg-white/5 border border-white/5 text-white/60">En ligne</span>
+                            </div>
+                            <div className="text-4xl font-display font-bold text-white mb-1 group-hover:text-green-400 transition-colors">
                                 {playlists.filter(p => p.isPublished).length}
                             </div>
-                            <div className="text-sm text-white/60">Publiées</div>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardContent className="pt-6">
-                            <div className="text-3xl font-bold gradient-text mb-1">
+                            <div className="text-sm text-slate-400">Playlists Publiées</div>
+                        </Card>
+
+                        <Card className="glass p-6 group hover:border-accent-500/30 transition-colors">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="p-3 bg-accent-500/10 rounded-xl text-accent-400 group-hover:scale-110 transition-transform">
+                                    <Music2 className="w-6 h-6" />
+                                </div>
+                                <span className="text-xs font-medium px-2 py-1 rounded-full bg-white/5 border border-white/5 text-white/60">Contenu</span>
+                            </div>
+                            <div className="text-4xl font-display font-bold text-white mb-1 group-hover:text-accent-400 transition-colors">
                                 {playlists.reduce((acc, p) => acc + p.tracks.total, 0)}
                             </div>
-                            <div className="text-sm text-white/60">Tracks Total</div>
-                        </CardContent>
-                    </Card>
+                            <div className="text-sm text-slate-400">Tracks Total</div>
+                        </Card>
+                    </div>
                 </div>
-            </div>
 
-            {/* Playlists Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {playlists.map((playlist) => (
-                    <Card key={playlist.id} className="group">
-                        <div className="relative aspect-square mb-4 overflow-hidden rounded-xl">
-                            {playlist.images?.[0]?.url ? (
-                                <Image
-                                    src={playlist.images[0].url}
-                                    alt={playlist.name}
-                                    fill
-                                    className="object-cover group-hover:scale-110 transition-transform duration-300"
-                                />
-                            ) : (
-                                <div className="w-full h-full bg-gradient-primary flex items-center justify-center">
-                                    <Music2 className="w-16 h-16 text-white/50" />
+                {/* Playlists Grid */}
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+                    {playlists.map((playlist) => (
+                        <Card key={playlist.id} className="group hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary-900/20 transition-all duration-300 border-white/5 bg-dark-900/40">
+                            <div className="relative aspect-square mb-5 overflow-hidden rounded-xl bg-dark-800 shadow-md">
+                                {playlist.images?.[0]?.url ? (
+                                    <Image
+                                        src={playlist.images[0].url}
+                                        alt={playlist.name}
+                                        fill
+                                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full bg-gradient-to-br from-dark-800 to-dark-700 flex items-center justify-center">
+                                        <Music2 className="w-16 h-16 text-white/20" />
+                                    </div>
+                                )}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                                {playlist.isPublished && (
+                                    <div className="absolute top-3 right-3">
+                                        <Badge variant="success" className="bg-green-500/20 text-green-400 border-green-500/20 backdrop-blur-md shadow-lg shadow-black/20">
+                                            <Check className="w-3 h-3 mr-1" />
+                                            Publié
+                                        </Badge>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="space-y-3">
+                                <div>
+                                    <h3 className="font-display font-bold text-xl mb-1 line-clamp-1 group-hover:text-primary-400 transition-colors">
+                                        {playlist.name}
+                                    </h3>
+                                    <p className="text-sm text-slate-400 line-clamp-2 min-h-[2.5rem]">
+                                        {playlist.description || 'Aucune description'}
+                                    </p>
                                 </div>
-                            )}
-                            {playlist.isPublished && (
-                                <div className="absolute top-2 right-2">
-                                    <Badge variant="primary">
-                                        <Check className="w-3 h-3 mr-1" />
-                                        Publié
-                                    </Badge>
+                                <div className="text-xs font-medium text-slate-500 flex items-center space-x-2">
+                                    <span className="px-2 py-1 rounded bg-white/5 border border-white/5">
+                                        {playlist.tracks.total} tracks
+                                    </span>
                                 </div>
-                            )}
+
+                                <div className="pt-2">
+                                    {playlist.isPublished ? (
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => handleUnpublish(playlist)}
+                                            className="w-full border-red-500/20 text-red-400 hover:bg-red-500/10 hover:border-red-500/40"
+                                        >
+                                            <X className="w-4 h-4 mr-2" />
+                                            Retirer
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            variant="primary"
+                                            size="sm"
+                                            onClick={() => handlePublish(playlist)}
+                                            className="w-full shadow-lg shadow-primary-900/20"
+                                        >
+                                            <Check className="w-4 h-4 mr-2" />
+                                            Publier
+                                        </Button>
+                                    )}
+                                </div>
+                            </div>
+                        </Card>
+                    ))}
+                </div>
+
+                {playlists.length === 0 && !loading && (
+                    <div className="text-center py-20 px-4">
+                        <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-slow">
+                            <Music2 className="w-10 h-10 text-white/20" />
                         </div>
-
-                        <h3 className="font-display font-bold text-lg mb-2 line-clamp-1">
-                            {playlist.name}
-                        </h3>
-                        <p className="text-sm text-white/60 mb-4 line-clamp-2">
-                            {playlist.description || 'Aucune description'}
+                        <h3 className="text-2xl font-display font-medium mb-3">Aucune playlist trouvée</h3>
+                        <p className="text-slate-400 mb-8 max-w-md mx-auto">
+                            Créez des playlists sur Spotify pour qu'elles apparaissent ici.
                         </p>
-                        <div className="text-sm text-white/40 mb-4">
-                            {playlist.tracks.total} tracks
-                        </div>
-
-                        {playlist.isPublished ? (
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleUnpublish(playlist)}
-                                className="w-full"
-                            >
-                                <X className="w-4 h-4 mr-2" />
-                                Retirer
-                            </Button>
-                        ) : (
-                            <Button
-                                variant="primary"
-                                size="sm"
-                                onClick={() => handlePublish(playlist)}
-                                className="w-full"
-                            >
-                                <Check className="w-4 h-4 mr-2" />
-                                Publier
-                            </Button>
-                        )}
-                    </Card>
-                ))}
+                        <Button variant="secondary" onClick={handleSync}>
+                            <RefreshCw className="w-4 h-4 mr-2" />
+                            Réessayer
+                        </Button>
+                    </div>
+                )}
             </div>
-
-            {playlists.length === 0 && !loading && (
-                <div className="text-center py-20">
-                    <Music2 className="w-16 h-16 mx-auto mb-4 text-white/20" />
-                    <h3 className="text-xl font-bold mb-2">Aucune playlist trouvée</h3>
-                    <p className="text-white/60 mb-6">
-                        Créez des playlists sur Spotify et revenez ici pour les publier
-                    </p>
-                    <Button variant="secondary" onClick={handleSync}>
-                        <RefreshCw className="w-4 h-4 mr-2" />
-                        Réessayer
-                    </Button>
-                </div>
-            )}
         </div>
     )
 }

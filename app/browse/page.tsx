@@ -56,108 +56,134 @@ export default function BrowsePage() {
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            {/* Header */}
-            <div className="mb-12">
-                <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">
-                    Découvrez les <span className="gradient-text">meilleures playlists</span>
-                </h1>
-                <p className="text-xl text-white/60 mb-8">
-                    Explorez des milliers de playlists créées par la communauté
-                </p>
+    return (
+        <div className="relative min-h-screen">
+            {/* Background Effects */}
+            <div className="fixed inset-0 pointer-events-none">
+                <div className="absolute top-[20%] right-[-5%] w-[400px] h-[400px] bg-primary-900/20 rounded-full blur-[120px] pointer-events-none" />
+            </div>
 
-                {/* Search */}
-                <div className="relative max-w-2xl">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
-                    <Input
-                        type="text"
-                        placeholder="Rechercher une playlist, un artiste, un genre..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-12"
-                    />
+            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                {/* Header */}
+                <div className="mb-12 text-center max-w-2xl mx-auto space-y-6 animate-fade-in">
+                    <h1 className="text-4xl md:text-6xl font-display font-medium mb-4">
+                        Découvrez les <br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-accent-400">Meilleures Playlists</span>
+                    </h1>
+                    <p className="text-slate-400 text-lg">
+                        Explorez des milliers de playlists créées par la communauté
+                    </p>
+
+                    {/* Search */}
+                    <div className="relative max-w-xl mx-auto mt-8 group">
+                        <div className="absolute inset-0 bg-gradient-to-r from-primary-500/20 to-accent-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        <div className="relative">
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
+                            <Input
+                                type="text"
+                                placeholder="Rechercher une playlist, un artiste, un genre..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="pl-12 bg-dark-900/80 border-white/10 h-14 rounded-2xl focus:ring-primary-500/50 shadow-lg shadow-black/20"
+                            />
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            {/* Results Count */}
-            <div className="mb-6">
-                <p className="text-white/60">
-                    {filteredPlaylists.length} playlist{filteredPlaylists.length > 1 ? 's' : ''} trouvée{filteredPlaylists.length > 1 ? 's' : ''}
-                </p>
-            </div>
-
-            {/* Playlists Grid */}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {filteredPlaylists.map((playlist) => (
-                    <Link key={playlist.id} href={`/playlist/${playlist.id}`}>
-                        <Card className="playlist-card h-full">
-                            <div className="relative aspect-square mb-4 overflow-hidden rounded-xl">
-                                {playlist.image_url ? (
-                                    <Image
-                                        src={playlist.image_url}
-                                        alt={playlist.name}
-                                        fill
-                                        className="playlist-card-image object-cover"
-                                    />
-                                ) : (
-                                    <div className="w-full h-full bg-gradient-primary flex items-center justify-center">
-                                        <Music2 className="w-16 h-16 text-white/50" />
-                                    </div>
-                                )}
-                            </div>
-
-                            <h3 className="font-display font-bold text-lg mb-2 line-clamp-1">
-                                {playlist.name}
-                            </h3>
-
-                            {playlist.description && (
-                                <p className="text-sm text-white/60 mb-3 line-clamp-2">
-                                    {playlist.description}
-                                </p>
-                            )}
-
-                            <div className="flex items-center justify-between text-sm">
-                                <div className="flex items-center space-x-2">
-                                    {playlist.user_image_url ? (
-                                        <img
-                                            src={playlist.user_image_url}
-                                            alt={playlist.user_display_name}
-                                            className="w-6 h-6 rounded-full"
-                                        />
-                                    ) : (
-                                        <div className="w-6 h-6 rounded-full bg-gradient-primary" />
-                                    )}
-                                    <span className="text-white/60 line-clamp-1">
-                                        {playlist.user_display_name}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/10">
-                                <span className="text-xs text-white/40">
-                                    {playlist.track_count} tracks
-                                </span>
-                                <div className="flex items-center space-x-1 text-white/40">
-                                    <Heart className="w-4 h-4" />
-                                    <span className="text-xs">{playlist.likes_count}</span>
-                                </div>
-                            </div>
-                        </Card>
-                    </Link>
-                ))}
-            </div>
-
-            {filteredPlaylists.length === 0 && (
-                <div className="text-center py-20">
-                    <Music2 className="w-16 h-16 mx-auto mb-4 text-white/20" />
-                    <h3 className="text-xl font-bold mb-2">Aucune playlist trouvée</h3>
-                    <p className="text-white/60">
-                        {searchQuery
-                            ? 'Essayez avec d\'autres mots-clés'
-                            : 'Soyez le premier à publier une playlist !'}
+                {/* Results Count */}
+                <div className="mb-8 flex items-center justify-between">
+                    <p className="text-slate-400 text-sm font-medium px-3 py-1 bg-white/5 rounded-full border border-white/5">
+                        {filteredPlaylists.length} playlist{filteredPlaylists.length > 1 ? 's' : ''} trouvée{filteredPlaylists.length > 1 ? 's' : ''}
                     </p>
                 </div>
-            )}
+
+                {/* Playlists Grid */}
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+                    {filteredPlaylists.map((playlist) => (
+                        <Link key={playlist.id} href={`/playlist/${playlist.id}`} className="block h-full">
+                            <Card className="h-full group hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary-900/10 transition-all duration-300 border-white/5 bg-dark-900/40 p-4">
+                                <div className="relative aspect-square mb-4 overflow-hidden rounded-xl bg-dark-800 shadow-md">
+                                    {playlist.image_url ? (
+                                        <Image
+                                            src={playlist.image_url}
+                                            alt={playlist.name}
+                                            fill
+                                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full bg-gradient-to-br from-dark-800 to-dark-700 flex items-center justify-center">
+                                            <Music2 className="w-16 h-16 text-white/20" />
+                                        </div>
+                                    )}
+                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                        <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center transform scale-50 group-hover:scale-100 transition-transform duration-300">
+                                            <Music2 className="w-6 h-6 text-white" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <h3 className="font-display font-bold text-lg leading-tight line-clamp-1 group-hover:text-primary-400 transition-colors">
+                                        {playlist.name}
+                                    </h3>
+
+                                    {playlist.description && (
+                                        <p className="text-xs text-slate-500 line-clamp-2 h-8">
+                                            {playlist.description}
+                                        </p>
+                                    )}
+
+                                    <div className="pt-2 flex items-center justify-between">
+                                        <div className="flex items-center space-x-2">
+                                            {playlist.user_image_url ? (
+                                                <img
+                                                    src={playlist.user_image_url}
+                                                    alt={playlist.user_display_name}
+                                                    className="w-5 h-5 rounded-full border border-white/10"
+                                                />
+                                            ) : (
+                                                <div className="w-5 h-5 rounded-full bg-primary-500/20 flex items-center justify-center">
+                                                    <span className="text-[10px] font-bold text-primary-400">
+                                                        {playlist.user_display_name.charAt(0)}
+                                                    </span>
+                                                </div>
+                                            )}
+                                            <span className="text-xs text-slate-400 line-clamp-1 max-w-[80px]">
+                                                {playlist.user_display_name}
+                                            </span>
+                                        </div>
+
+                                        <div className="flex items-center space-x-3 text-xs text-slate-500">
+                                            <div className="flex items-center space-x-1">
+                                                <Music2 className="w-3 h-3" />
+                                                <span>{playlist.track_count}</span>
+                                            </div>
+                                            <div className="flex items-center space-x-1">
+                                                <Heart className="w-3 h-3" />
+                                                <span>{playlist.likes_count}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Card>
+                        </Link>
+                    ))}
+                </div>
+
+                {filteredPlaylists.length === 0 && (
+                    <div className="text-center py-20">
+                        <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <Music2 className="w-8 h-8 text-white/20" />
+                        </div>
+                        <h3 className="text-xl font-display font-medium mb-2">Aucune playlist trouvée</h3>
+                        <p className="text-slate-400">
+                            {searchQuery
+                                ? 'Essayez avec d\'autres mots-clés'
+                                : 'Soyez le premier à publier une playlist !'}
+                        </p>
+                    </div>
+                )}
+            </div>
         </div>
     )
 }
